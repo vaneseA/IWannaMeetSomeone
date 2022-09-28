@@ -3,8 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/layout/activity_intro.xml" value="0.25" />
+        <entry key="app/src/main/res/drawable-v24/bg_edit_text_basic.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable-v24/bg_image_search.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable-v24/radionbutton_female.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable-v24/radionbutton_male.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_intro.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.38958333333333334" />
+        <entry key="app/src/main/res/layout/activity_signup.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.20416666666666666" />
         <entry key="app/src/main/res/layout/item_card.xml" value="0.12777777777777777" />
       </map>

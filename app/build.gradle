@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+
+    id 'org.jetbrains.kotlin.android.extensions'
 }
 
 android {
@@ -43,5 +45,8 @@ dependencies {
 
     //카드스택뷰
     implementation "com.yuyakaido.android:card-stack-view:2.3.4"
+    //CircleView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
 
 }
