@@ -149,19 +149,20 @@
 
 
 
-            <EditText
-                android:id="@+id/ageEdt"
+            <TextView
+                android:id="@+id/birthTxt"
+                android:textSize="20sp"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_edit_text_basic"
-                android:hint="생년월일:  예)910619"
+                android:hint="생년월일"
                 android:imeOptions="actionDone"
-                android:inputType="text"
+                android:onClick="clickBirth"
                 android:padding="8dp" />
 
             <EditText
-                android:id="@+id/cityEdt"
+                android:id="@+id/locationEdt"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="5dp"

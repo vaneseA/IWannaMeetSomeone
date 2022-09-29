@@ -36,7 +36,7 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
 
-        android:id="@+id/profileImg"
+        android:id="@+id/myProfileImg"
         android:layout_width="128dp"
         android:layout_height="128dp"
         android:layout_below="@id/toolbar_profile_set_activity"
@@ -49,15 +49,15 @@
 
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_alignRight="@id/profileImg"
-        android:layout_alignBottom="@id/profileImg"
+        android:layout_alignRight="@id/myProfileImg"
+        android:layout_alignBottom="@id/myProfileImg"
         android:src="@drawable/camera" />
 
     <EditText
-        android:id="@+id/nicknameEdt"
+        android:id="@+id/myNicknameEdt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/profileImg"
+        android:layout_below="@id/myProfileImg"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_edit_text_create_activity"
@@ -70,15 +70,15 @@
         android:id="@+id/radio_group_profile_set"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/nicknameEdt"
+        android:layout_alignBottom="@id/myNicknameEdt"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_toRightOf="@id/nicknameEdt"
+        android:layout_toRightOf="@id/myNicknameEdt"
         android:gravity="center"
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/radio_button_profile_set_male"
+            android:id="@+id/rbProfileSet_Male"
             android:layout_width="50dp"
             android:layout_height="40dp"
             android:layout_weight="1"
@@ -92,7 +92,7 @@
             android:textColor="@color/selector_text_color_radiobutton" />
 
         <RadioButton
-            android:id="@+id/radio_button_profile_set_female"
+            android:id="@+id/rbProfileSet_Female"
             android:layout_width="50dp"
             android:layout_height="40dp"
             android:layout_weight="1"
@@ -107,10 +107,10 @@
     </RadioGroup>
 
     <TextView
-        android:id="@+id/tv_profile_set_birth"
+        android:id="@+id/myBirth"
         android:layout_width="wrap_content"
         android:layout_height="44dp"
-        android:layout_below="@id/nicknameEdt"
+        android:layout_below="@id/myNicknameEdt"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_edit_text_create_activity"
@@ -121,14 +121,14 @@
         android:padding="10dp" />
 
     <TextView
-        android:id="@+id/tv_profile_set_location"
+        android:id="@+id/myLocation"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_below="@id/nicknameEdt"
+        android:layout_below="@id/myNicknameEdt"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:layout_toRightOf="@id/tv_profile_set_birth"
+        android:layout_toRightOf="@id/myBirth"
         android:background="@drawable/bg_edit_text_create_activity"
         android:clickable="true"
         android:ems="11"
@@ -137,10 +137,10 @@
         android:padding="10dp" />
 
     <EditText
-        android:id="@+id/et_profile_set_message"
+        android:id="@+id/myMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_profile_set_birth"
+        android:layout_below="@id/myBirth"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
@@ -154,11 +154,11 @@
         android:privateImeOptions="defaultInputmode=korean" />
 
     <TextView
-        android:id="@+id/tv_message_length"
+        android:id="@+id/message_length"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@id/et_profile_set_message"
-        android:layout_alignBottom="@id/et_profile_set_message"
+        android:layout_alignRight="@id/myMessage"
+        android:layout_alignBottom="@id/myMessage"
         android:layout_margin="4dp"
         android:text="1/50자"
         android:textColor="#ff888888" />

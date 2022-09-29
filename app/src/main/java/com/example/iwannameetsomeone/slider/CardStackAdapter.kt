@@ -13,6 +13,7 @@ import com.example.iwannameetsomeone.auth.UserDataModel
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import java.util.*
 
 class CardStackAdapter(val context: Context, val items: List<UserDataModel>) :
     RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
@@ -34,8 +35,8 @@ class CardStackAdapter(val context: Context, val items: List<UserDataModel>) :
 
         val image = itemView.findViewById<ImageView>(R.id.profileImageArea)
         val nickname = itemView.findViewById<TextView>(R.id.itemNickname)
-        val age = itemView.findViewById<TextView>(R.id.itemAge)
-        val city = itemView.findViewById<TextView>(R.id.itemCity)
+        val birth = itemView.findViewById<TextView>(R.id.itemBirth)
+        val location = itemView.findViewById<TextView>(R.id.itemLocation)
 
 
         fun binding(data: UserDataModel) {
@@ -52,8 +53,21 @@ class CardStackAdapter(val context: Context, val items: List<UserDataModel>) :
 
             })
             nickname.text = "닉네임: " + data.nickname
-            age.text = "나이: " + data.age
-            city.text = "지역: " + data.city
+            birth.text = "생년월일: " + data.birth
+            location.text = "지역: " + data.location
         }
+    }
+    fun calculateAge(date: Date?): Int {
+        val birthCalendar = Calendar.getInstance()
+        birthCalendar.time = date ?: Date()
+        val current = Calendar.getInstance()
+        val currentYear = current[Calendar.YEAR]
+        val currentMonth = current[Calendar.MONTH]
+        val currentDay = current[Calendar.DAY_OF_MONTH]
+        var age = currentYear - birthCalendar[Calendar.YEAR]
+        if (birthCalendar[Calendar.MONTH] * 100 +
+            birthCalendar[Calendar.DAY_OF_MONTH] > currentMonth * 100 + currentDay
+        ) age--
+        return age
     }
 }
