@@ -102,25 +102,15 @@
 
             <EditText
                 android:id="@+id/nickEdt"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/bg_edit_text_basic"
                 android:hint="닉네임 입력"
-                android:imeOptions="actionDone"
                 android:inputType="text"
                 android:padding="8dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
             <RadioGroup
+                android:layout_marginStart="5dp"
                 android:id="@+id/rgAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -129,7 +119,7 @@
                 <RadioButton
                     android:id="@+id/rbAccountMale"
                     android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/radionbutton_male"
                     android:button="@android:color/transparent"
                     android:checked="true"
@@ -140,7 +130,7 @@
                 <RadioButton
                     android:id="@+id/rbAccountFemale"
                     android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/radionbutton_female"
                     android:button="@android:color/transparent"
                     android:gravity="center"
@@ -148,15 +138,24 @@
                     android:textColor="@color/selector_text_color_radiobutton"
                     app:backgroundTint="@null" />
             </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
 
             <EditText
                 android:id="@+id/ageEdt"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_edit_text_basic"
-                android:hint="나이 입력"
+                android:hint="생년월일:  예)910619"
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 android:padding="8dp" />
@@ -168,7 +167,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_edit_text_basic"
-                android:hint="지역: 예)성동구"
+                android:hint="지역:  예)성동구"
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 android:padding="8dp" />
@@ -197,9 +196,9 @@
 
             <ImageView
                 android:id="@+id/profileImg"
-                android:scaleType="centerCrop"
                 android:layout_width="300dp"
-                android:layout_height="300dp" />
+                android:layout_height="300dp"
+                android:scaleType="centerCrop" />
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

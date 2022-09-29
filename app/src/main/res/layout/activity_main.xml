@@ -1,25 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/LogoutBtn2"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardStackView">
-        <Button
-            android:id="@+id/LogoutBtn2"
-            android:layout_width="match_parent"
-            android:text="로그이웃"
-            android:layout_height="match_parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-<com.yuyakaido.android.cardstackview.CardStackView
-    android:id="@+id/cardStackView"
-    android:layout_marginTop="60dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/maincolor">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/jalnanche"
+            android:text="추천 회원"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/myInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="16dp"
+            android:clickable="true"
+            android:fontFamily="@font/jalnanche"
+            android:text="내 정보"
+            android:textColor="@color/white" />
+    </com.google.android.material.appbar.MaterialToolbar>
+
+        <com.yuyakaido.android.cardstackview.CardStackView
+            android:id="@+id/cardStackView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+
+
+</LinearLayout>
