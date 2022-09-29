@@ -17,7 +17,7 @@
             android:name=".auth.SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".auth.IntroActivity"
+            android:name=".auth.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".SplashActivity"

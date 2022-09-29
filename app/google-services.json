@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "606594968284",
+    "project_id": "iwannameetsomeone",
+    "storage_bucket": "iwannameetsomeone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606594968284:android:a6bb70ec7ebc50e35ae219",
+        "android_client_info": {
+          "package_name": "com.example.iwannameetsomeone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606594968284-v3q5vfive75nhnfd73v7u4dmhpfethv1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvIRZw8-0Rq4D__n_2j2HpcYsdEGiG__E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606594968284-v3q5vfive75nhnfd73v7u4dmhpfethv1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

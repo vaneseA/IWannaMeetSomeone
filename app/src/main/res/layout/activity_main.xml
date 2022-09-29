@@ -6,8 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardStackView">
+        <Button
+            android:id="@+id/LogoutBtn2"
+            android:layout_width="match_parent"
+            android:text="로그이웃"
+            android:layout_height="match_parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 <com.yuyakaido.android.cardstackview.CardStackView
     android:id="@+id/cardStackView"
+    android:layout_marginTop="60dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>
 
