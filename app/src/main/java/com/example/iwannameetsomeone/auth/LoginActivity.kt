@@ -35,11 +35,11 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
 
+        }
 
-            signupBtn.setOnClickListener {
-                startActivity(Intent(this, SignupActivity::class.java))
+        signupBtn.setOnClickListener {
+            startActivity(Intent(this, SignupActivity::class.java))
 
-            }
         }
     }
 }
