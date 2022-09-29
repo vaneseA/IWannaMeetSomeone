@@ -25,16 +25,21 @@ class LoginActivity : AppCompatActivity() {
 
             val email = findViewById<EditText>(R.id.emailEdt)
             val pwd = findViewById<EditText>(R.id.passwordEdt)
-
-            auth.signInWithEmailAndPassword(email.text.toString(), pwd.text.toString())
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        startActivity(Intent(this, MainActivity::class.java))
-                    } else {
-                        Toast.makeText(this, "실패", Toast.LENGTH_LONG).show()
+            if (email.text?.isEmpty()!!) {
+                Toast.makeText(this, "email을 입력해주세요", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            } else {
+                auth.signInWithEmailAndPassword(email.text.toString(), pwd.text.toString())
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            startActivity(Intent(this, MainActivity::class.java))
+                            Toast.makeText(this, "로그인 성공", Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(this, "Email 혹은 비밀번호를 확인해주세요", Toast.LENGTH_LONG).show()
+                        }
                     }
-                }
 
+            }
         }
 
         signupBtn.setOnClickListener {
