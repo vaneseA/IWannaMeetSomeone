@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/drawable-v24/radionbutton_female.xml" value="0.1" />
         <entry key="app/src/main/res/drawable-v24/radionbutton_male.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_intro.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.178125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_signup.xml" value="0.19667590027700832" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.20416666666666666" />
