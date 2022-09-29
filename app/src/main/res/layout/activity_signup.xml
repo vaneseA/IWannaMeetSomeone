@@ -83,12 +83,12 @@
             android:padding="8dp" />
 
         <EditText
-            android:id="@+id/passwordDupleCheckEdt"
+            android:id="@+id/pwDupCheckEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/bg_edit_text_basic"
-            android:hint="비밀번호 확인"
+            android:hint="비밀번호 재입력"
             android:inputType="textPassword"
             android:padding="8dp" />
 
@@ -168,13 +168,12 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_edit_text_basic"
-                android:hint="지역 입력"
+                android:hint="지역: 예)성동구"
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 android:padding="8dp" />
 
         </LinearLayout>
-
 
         <TextView
             android:layout_width="wrap_content"
@@ -185,12 +184,22 @@
             android:text="프로필 이미지"
             android:textSize="17dp" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profileImg"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_image_search" />
+        <RelativeLayout
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center">
 
+            <Button
+                android:id="@+id/profileImgBtn"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:background="@drawable/bg_image_search" />
+
+            <ImageView
+                android:id="@+id/profileImg"
+                android:scaleType="centerCrop"
+                android:layout_width="300dp"
+                android:layout_height="300dp" />
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
