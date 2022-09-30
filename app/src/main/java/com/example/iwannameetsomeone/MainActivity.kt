@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import com.example.iwannameetsomeone.auth.LoginActivity
 import com.example.iwannameetsomeone.auth.UserDataModel
+import com.example.iwannameetsomeone.settings.MyPageActivity
 import com.example.iwannameetsomeone.slider.CardStackAdapter
 import com.example.iwannameetsomeone.utils.FirebaseRef
 import com.google.firebase.auth.ktx.auth
@@ -40,6 +41,11 @@ class MainActivity : AppCompatActivity() {
             auth.signOut()
 
             startActivity(Intent(this, LoginActivity::class.java))
+        }
+
+        myInfo.setOnClickListener {
+
+            startActivity(Intent(this, MyPageActivity::class.java))
         }
 
 
