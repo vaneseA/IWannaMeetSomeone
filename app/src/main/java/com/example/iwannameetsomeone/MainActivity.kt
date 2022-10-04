@@ -1,11 +1,18 @@
 package com.example.iwannameetsomeone
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.bumptech.glide.Glide
 import com.example.iwannameetsomeone.auth.LoginActivity
 import com.example.iwannameetsomeone.auth.UserDataModel
@@ -68,17 +75,17 @@ class MainActivity : AppCompatActivity() {
 
             override fun onCardSwiped(direction: Direction?) {
 
-                if(direction == Direction.Right) {
-
+                if (direction == Direction.Right) {
+                    userLikeOtherUser(uid, usersDataList[userCount].uid.toString())
                 }
-                if(direction == Direction.Left) {
+                if (direction == Direction.Left) {
 
                 }
 
                 userCount = userCount + 1
 
 
-                if(userCount == usersDataList.count()) {
+                if (userCount == usersDataList.count()) {
                     getUserDataList(curruntUserGender)
                 }
             }
@@ -110,7 +117,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun getMyUserData(){
+    private fun getMyUserData() {
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
@@ -124,6 +131,7 @@ class MainActivity : AppCompatActivity() {
                 getUserDataList(curruntUserGender)
 
             }
+
             override fun onCancelled(databaseError: DatabaseError) {
                 // Getting Post failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
@@ -132,7 +140,7 @@ class MainActivity : AppCompatActivity() {
         FirebaseRef.userInfoRef.child(uid).addValueEventListener(postListener)
     }
 
-    private fun getUserDataList(curruntUserGender : String) {
+    private fun getUserDataList(curruntUserGender: String) {
 
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -141,13 +149,12 @@ class MainActivity : AppCompatActivity() {
 
                     val user = dataModel.getValue(UserDataModel::class.java)
 
-                    if(user!!.gender.toString().equals(curruntUserGender)){
+                    if (user!!.gender.toString().equals(curruntUserGender)) {
 
-                    }else{
+                    } else {
 
                         usersDataList.add(user!!)
                     }
-
 
 
                 }
@@ -156,6 +163,7 @@ class MainActivity : AppCompatActivity() {
 
 
             }
+
             override fun onCancelled(databaseError: DatabaseError) {
                 // Getting Post failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
@@ -169,7 +177,67 @@ class MainActivity : AppCompatActivity() {
     //유저의 좋아요를 표시하는 부분
     //필요한 데이터값 양쪽의 uid값
 
-    private fun userLikeOtherUser() {
+    private fun userLikeOtherUser(myUid: String, otherUid: String) {
 
+
+        FirebaseRef.userLikeRef.child(myUid).child(otherUid).setValue("true")
+
+        getOutherUserLikeList(otherUid)
+    }
+
+    private fun getOutherUserLikeList(otherUid: String) {
+        val postListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                //여기 리스트 안에서 나의 uid가 있는지 확인
+                //내가 좋아요를 누른 사람의 좋아요 리스트를 불러온다
+                //상대 좋아요 리스트에서 내 uid가 있는지 확인
+                for (dataModel in dataSnapshot.children) {
+
+                    val likeUserKey = dataModel.key.toString()
+                    if(likeUserKey.equals(uid)){
+                        Toast.makeText(this@MainActivity, "매칭 완료", Toast.LENGTH_SHORT).show()
+                        createNotificationChannel()
+                        sendNotification()
+                    }
+
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+            }
+        }
+        FirebaseRef.userLikeRef.child(otherUid).addValueEventListener(postListener)
+    }
+    //Notification
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "name"
+            val descriptionText = "description"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("Test_Channel", name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+    private fun sendNotification(){
+        var builder = NotificationCompat.Builder(this, "Test_Channel")
+            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setContentTitle("매칭완료")
+            .setContentText("매칭이 완료되었습니다. 저사람도 나를 좋아해요.")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        with(NotificationManagerCompat.from(this)) {
+            notify(123, builder.build())
+        }
     }
 }
+
