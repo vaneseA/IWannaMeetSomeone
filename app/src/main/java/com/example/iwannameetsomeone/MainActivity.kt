@@ -164,4 +164,12 @@ class MainActivity : AppCompatActivity() {
         FirebaseRef.userInfoRef.addValueEventListener(postListener)
 
     }
+
+
+    //유저의 좋아요를 표시하는 부분
+    //필요한 데이터값 양쪽의 uid값
+
+    private fun userLikeOtherUser() {
+
+    }
 }
