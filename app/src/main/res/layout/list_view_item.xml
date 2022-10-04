@@ -2,19 +2,59 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:text="닉네임     : "
-        android:textSize="20sp"
-        android:layout_margin="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 
-    <TextView
-        android:id="@+id/listViewItemNickname"
-        android:text="홍길동"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:layout_marginTop="20dp"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:background="@drawable/bg_edit_text_basic"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/listViewItemNickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/jalnanche"
+            android:text="홍길동"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/listViewItemAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/jalnanche"
+            android:text="19살"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+
+        <TextView
+            android:id="@+id/listViewItemLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+
+            android:layout_marginEnd="5dp"
+            android:fontFamily="@font/jalnanche"
+            android:text="성동구"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+
+    <Button
+        android:layout_marginStart="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/maincolor"
+        android:fontFamily="@font/jalnanche"
+        android:textSize="15dp"
+        android:padding="8dp"
+        android:text="좋아요 취소"
+        android:textColor="@color/white" />
+
+    </LinearLayout>
 </LinearLayout>

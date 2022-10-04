@@ -31,7 +31,10 @@ class ListViewAdapter(val context : Context, val items : MutableList<UserDataMod
         }
 
         val nickname = convertView!!.findViewById<TextView>(R.id.listViewItemNickname)
+        val location = convertView!!.findViewById<TextView>(R.id.listViewItemLocation)
         nickname.text = items[position].nickname
+        location.text = items[position].location
+
 
         return convertView!!
     }

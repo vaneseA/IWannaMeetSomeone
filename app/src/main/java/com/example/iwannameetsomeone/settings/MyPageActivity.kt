@@ -20,6 +20,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_my_page.*
 import kotlinx.android.synthetic.main.item_card.*
+
 private val uid = FirebaseAuthUtils.getUid()
 
 private val TAG = "MyPageActivity"
@@ -27,12 +28,8 @@ private val likeUserListUid = mutableListOf<String>()
 private val likeUserList = mutableListOf<UserDataModel>()
 
 lateinit var listviewAdapter: ListViewAdapter
+
 class MyPageActivity : AppCompatActivity() {
-
-
-
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +57,7 @@ class MyPageActivity : AppCompatActivity() {
         }
 
     }
+
     private fun getMyData() {
 
         val postListener = object : ValueEventListener {
@@ -99,6 +97,7 @@ class MyPageActivity : AppCompatActivity() {
         }
         FirebaseRef.userInfoRef.child(uid).addValueEventListener(postListener)
     }
+
     private fun checkMatching(otherUid: String) {
 
         val postListener = object : ValueEventListener {
@@ -193,55 +192,55 @@ class MyPageActivity : AppCompatActivity() {
 }
 
 
-    private fun getMyLikeList(){
+//    private fun getMyLikeList(){
+//
+//        val postListener = object : ValueEventListener {
+//            override fun onDataChange(dataSnapshot: DataSnapshot) {
+//
+//                for (dataModel in dataSnapshot.children) {
+//                    // 내가 좋아요 한 사람들의 uid가  likeUserList에 들어있음
+//                    likeUserListUid.add(dataModel.key.toString())
+//                }
+//                getUserDataList()
+//
+//            }
+//
+//            override fun onCancelled(databaseError: DatabaseError) {
+//                // Getting Post failed, log a message
+//                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+//            }
+//        }
+//        FirebaseRef.userLikeRef.child(uid).addValueEventListener(postListener)
+//
+//    }
 
-        val postListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                for (dataModel in dataSnapshot.children) {
-                    // 내가 좋아요 한 사람들의 uid가  likeUserList에 들어있음
-                    likeUserListUid.add(dataModel.key.toString())
-                }
-                getUserDataList()
-
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-            }
-        }
-        FirebaseRef.userLikeRef.child(uid).addValueEventListener(postListener)
-
-    }
-
-    private fun getUserDataList(){
-
-        val postListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                for (dataModel in dataSnapshot.children) {
-
-                    val user = dataModel.getValue(UserDataModel::class.java)
-
-                    // 전체 유저중에 내가 좋아요한 사람들의 정보만 add함
-                    if(likeUserListUid.contains(user?.uid)) {
-
-                        likeUserList.add(user!!)
-                    }
-
-                }
-                listviewAdapter.notifyDataSetChanged()
-                Log.d(TAG, likeUserList.toString())
-
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-            }
-        }
-        FirebaseRef.userInfoRef.addValueEventListener(postListener)
-
-    }
+//    private fun getUserDataList(){
+//
+//        val postListener = object : ValueEventListener {
+//            override fun onDataChange(dataSnapshot: DataSnapshot) {
+//
+//                for (dataModel in dataSnapshot.children) {
+//
+//                    val user = dataModel.getValue(UserDataModel::class.java)
+//
+//                    // 전체 유저중에 내가 좋아요한 사람들의 정보만 add함
+//                    if(likeUserListUid.contains(user?.uid)) {
+//
+//                        likeUserList.add(user!!)
+//                    }
+//
+//                }
+//                listviewAdapter.notifyDataSetChanged()
+//                Log.d(TAG, likeUserList.toString())
+//
+//            }
+//
+//            override fun onCancelled(databaseError: DatabaseError) {
+//                // Getting Post failed, log a message
+//                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+//            }
+//        }
+//        FirebaseRef.userInfoRef.addValueEventListener(postListener)
+//
+//    }
 
