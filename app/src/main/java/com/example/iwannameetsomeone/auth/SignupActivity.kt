@@ -19,9 +19,11 @@ import androidx.core.widget.addTextChangedListener
 import com.example.iwannameetsomeone.MainActivity
 import com.example.iwannameetsomeone.R
 import com.example.iwannameetsomeone.utils.FirebaseRef
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_signup.*
 import java.io.ByteArrayOutputStream
@@ -61,7 +63,7 @@ class SignupActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_PICK)
             getAction.launch("image/*")
             //기존 버튼 배경 사라지게
-            profileImgBtn.alpha =0f
+            profileImgBtn.alpha = 0f
 
             startActivityForResult(intent, 0)
         }
@@ -89,7 +91,6 @@ class SignupActivity : AppCompatActivity() {
             } else if (location.isEmpty()!!) {
                 Toast.makeText(this, "지역을 입력해주세요", Toast.LENGTH_SHORT).show()
             } else {
-
                 auth.createUserWithEmailAndPassword(email.text.toString(), pwd.text.toString())
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
@@ -97,28 +98,47 @@ class SignupActivity : AppCompatActivity() {
                             val user = auth.currentUser
                             uid = user?.uid.toString()
 
-                            val userModel = UserDataModel(
-                                uid,
-                                nickname,
-                                birth,
-                                gender,
-                                location
-                            )
+                            // Token
+                            FirebaseMessaging.getInstance().token.addOnCompleteListener(
+                                OnCompleteListener { task ->
+                                    if (!task.isSuccessful) {
+                                        Log.w(
+                                            TAG,
+                                            "Fetching FCM registration token failed",
+                                            task.exception
+                                        )
+                                        return@OnCompleteListener
+                                    }
 
-                            //데이터베이스에 저장하기
-                            FirebaseRef.userInfoRef.child(uid).setValue(userModel)
-                            uploadImage(uid)
-                            startActivity(Intent(this, MainActivity::class.java))
+                                    // Get new FCM registration token
+                                    val token = task.result
+
+                                    val userModel = UserDataModel(
+                                        uid,
+                                        nickname,
+                                        birth,
+                                        gender,
+                                        location,
+                                        token
+                                    )
+
+                                    //데이터베이스에 저장하기
+                                    FirebaseRef.userInfoRef.child(uid).setValue(userModel)
+                                    uploadImage(uid)
+                                    startActivity(Intent(this, MainActivity::class.java))
+                                })
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.exception)
 
                         }
+
                     }
 
-            }
-        }
 
+            }
+
+        }
         passwordEdt.addTextChangedListener {
             isPwDupOk = (it.toString() == pwDupCheckEdt.text.toString())
         }
@@ -126,6 +146,7 @@ class SignupActivity : AppCompatActivity() {
             isPwDupOk = (it.toString() == passwordEdt.text.toString())
         }
     }
+
 
     private fun uploadImage(uid: String) {
 
@@ -151,6 +172,7 @@ class SignupActivity : AppCompatActivity() {
 
 
     }
+
     fun clickBirth(view: View?) {
         val birthDate = birthTxt!!.text.toString()
         val birthDates = birthDate.split("\\.").toTypedArray()
