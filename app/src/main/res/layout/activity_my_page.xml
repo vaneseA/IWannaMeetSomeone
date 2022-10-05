@@ -163,31 +163,41 @@
         android:text="1/50자"
         android:textColor="#ff888888" />
 
-    <TextView
-        android:id="@+id/PepleWhoLikesMeMessage"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/myMessage"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@id/myMessage"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="90dp"
         android:layout_marginRight="16dp"
-        android:gravity="center"
-        android:text="내가 찜한 회원"
-        android:fontFamily="@font/jalnanche"
-        android:padding="10dp"
-        />
+        android:background="@drawable/bg_edit_text_basic"
+        android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/PepleWhoLikesMeListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/PepleWhoLikesMeMessage"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:gravity="top"
-        android:hint="나를 찜한 회원 리스트"
-        android:maxLength="50"
-        android:maxLines="4"
-        android:padding="10dp"
-        />
+        <TextView
+            android:id="@+id/PepleWhoLikesMeMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/myMessage"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:fontFamily="@font/jalnanche"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="내가 찜한 회원" />
+
+        <ListView
+            android:id="@+id/PepleWhoLikesMeListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/PepleWhoLikesMeMessage"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:gravity="top"
+            android:hint="나를 찜한 회원 리스트"
+            android:maxLength="50"
+            android:maxLines="4"
+            android:padding="10dp" />
+
+    </LinearLayout>
+
 </RelativeLayout>
