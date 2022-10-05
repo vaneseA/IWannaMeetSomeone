@@ -65,7 +65,7 @@ class MyPageActivity : AppCompatActivity() {
                 Log.d(TAG, dataSnapshot.toString())
                 val data = dataSnapshot.getValue(UserDataModel::class.java)
 
-                myMessage.text = data!!.uid
+//                myMessage.text = data!!.uid
                 myNickname.text = data!!.nickname
                 myBirth.text = data!!.birth.toString()
                 myLocation.text = data!!.location
