@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 private val uid = FirebaseAuthUtils.getUid()
+private val childUid = FirebaseAuthUtils.getUid()
 
 private val TAG = "MyPageActivity"
 private val likeUserListUid = mutableListOf<String>()
@@ -68,6 +69,15 @@ class MyPageActivity : AppCompatActivity() {
 
             return@setOnItemClickListener
         }
+
+        userListView.setOnItemLongClickListener { parent, view, position, id ->
+
+
+            FirebaseRef.userLikeRef.child(uid).child(childUid).removeValue()
+
+            return@setOnItemLongClickListener(true)
+        }
+
         // 저기 내가 좋아요한 유저를 클릭하면은(Long Click)
         // 만약에 서로 좋아요한 사람이 아니면은, 메세지 못 보내도록 함
         // 메세지 보내기 창이 떠서 메세지를 보낼 수 있게 하고
@@ -248,6 +258,12 @@ class MyPageActivity : AppCompatActivity() {
         // 받는 사람 uid
         // Message
         // 누가 보냈는지
+
+    }
+    private fun userLikeCansle(myUid: String, otherUid: String) {
+
+
+        FirebaseRef.userLikeRef.child(myUid).child(otherUid).removeValue()
 
     }
 

@@ -205,5 +205,32 @@ class SignupActivity : AppCompatActivity() {
         datePickerDialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
         datePickerDialog.show()
     }
+    fun clickLotation(view: View?) {
+        val birthDate = birthTxt!!.text.toString()
+        val birthDates = birthDate.split("\\.").toTypedArray()
+        var userYear: String
 
+        try {
+            userYear = birthDates[0].toString()
+        } catch (e: Exception) {
+            userYear = "지역을 선택해주세요"
+
+        }
+        val datePickerDialog = DatePickerDialog(
+            this,
+            android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+            { view, year, month, dayOfMonth ->
+                y = year
+                m = month + 1
+                d = dayOfMonth
+                birthTxt!!.text = "$y.$m.$d"
+            },
+            userYear,
+            userMonth - 1,
+            userDate
+        )
+        datePickerDialog.datePicker.calendarViewShown = false
+        datePickerDialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        datePickerDialog.show()
+    }
 }

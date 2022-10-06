@@ -15,5 +15,13 @@ class FirebaseAuthUtils {
             return auth.currentUser?.uid.toString()
 
         }
+
+        fun getChildUid() : String {
+
+            auth = FirebaseAuth.getInstance()
+
+            return auth.currentUser?.uid.toString()
+
+        }
     }
 }
