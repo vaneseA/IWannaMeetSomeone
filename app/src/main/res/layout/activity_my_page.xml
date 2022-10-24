@@ -36,7 +36,7 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
 
-        android:id="@+id/myProfileImg"
+        android:id="@+id/myPageImg"
         android:layout_width="128dp"
         android:layout_height="128dp"
         android:layout_below="@id/toolbar_profile_set_activity"
@@ -46,18 +46,18 @@
         android:src="@mipmap/ic_launcher" />
 
     <ImageView
-
+android:id="@+id/imgChangeBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_alignRight="@id/myProfileImg"
-        android:layout_alignBottom="@id/myProfileImg"
+        android:layout_alignRight="@id/myPageImg"
+        android:layout_alignBottom="@id/myPageImg"
         android:src="@drawable/camera" />
 
     <EditText
         android:id="@+id/myNickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/myProfileImg"
+        android:layout_below="@id/myPageImg"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_edit_text_create_activity"

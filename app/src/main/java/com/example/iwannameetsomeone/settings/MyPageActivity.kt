@@ -1,13 +1,18 @@
 package com.example.iwannameetsomeone.settings
 
 import android.app.DatePickerDialog
+import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
 import com.example.iwannameetsomeone.Adapter.ListViewAdapter
@@ -31,6 +36,7 @@ import kotlinx.android.synthetic.main.item_card.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import java.util.*
 
@@ -70,6 +76,19 @@ class MyPageActivity : AppCompatActivity() {
         // 전체 유저 중에서, 내가 좋아요한 사람들 가져와서
         // 이 사람이 나와 매칭이 되어있는지 확인
 
+        val getAction = registerForActivityResult(
+            ActivityResultContracts.GetContent(),
+            ActivityResultCallback { uri ->
+                myPageImg.setImageURI(uri)
+            }
+        )
+        imgChangeBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            getAction.launch("image/*")
+
+            startActivityForResult(intent, 0)
+        }
+
         userListView.setOnItemClickListener { parent, view, position, id ->
 
 //            Log.d(TAG, likeUserList[position].uid.toString())
@@ -102,6 +121,7 @@ class MyPageActivity : AppCompatActivity() {
                 genderCheck,
                 myLocation.text.toString()
             )
+            uploadImageForUpdate(uid)
             finish()
         }
 
@@ -131,7 +151,7 @@ class MyPageActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         Glide.with(baseContext)
                             .load(task.result)
-                            .into(myProfileImg)
+                            .into(myPageImg)
 
                     }
 
@@ -346,6 +366,30 @@ class MyPageActivity : AppCompatActivity() {
         datePickerDialog.datePicker.calendarViewShown = false
         datePickerDialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
         datePickerDialog.show()
+    }
+    private fun uploadImageForUpdate(uid: String) {
+
+        val storage = Firebase.storage
+        val storageRef = storage.reference.child(uid + ".png")
+
+
+        // Get the data from an ImageView as bytes
+        myPageImg.isDrawingCacheEnabled = true
+        myPageImg.buildDrawingCache()
+        val bitmap = (myPageImg.drawable as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+
+        var uploadTask = storageRef.putBytes(data)
+        uploadTask.addOnFailureListener {
+            // Handle unsuccessful uploads
+        }.addOnSuccessListener { taskSnapshot ->
+            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+            // ...
+        }
+
+
     }
 
 }
