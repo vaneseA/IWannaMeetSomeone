@@ -1,9 +1,12 @@
 package com.example.iwannameetsomeone.settings
 
+import android.app.DatePickerDialog
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
@@ -14,20 +17,22 @@ import com.example.iwannameetsomeone.Message.fcm.PushNotification
 import com.example.iwannameetsomeone.Message.fcm.RetrofitInstance
 import com.example.iwannameetsomeone.R
 import com.example.iwannameetsomeone.auth.UserDataModel
+
 import com.example.iwannameetsomeone.utils.FirebaseAuthUtils
 import com.example.iwannameetsomeone.utils.FirebaseRef
 import com.example.iwannameetsomeone.utils.MyInfo
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_my_page.*
+import kotlinx.android.synthetic.main.activity_signup.*
 import kotlinx.android.synthetic.main.item_card.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Exception
+import java.util.*
 
 private val uid = FirebaseAuthUtils.getUid()
 private val childUid = FirebaseAuthUtils.getUid()
@@ -36,9 +41,14 @@ private val TAG = "MyPageActivity"
 private val likeUserListUid = mutableListOf<String>()
 private val likeUserList = mutableListOf<UserDataModel>()
 
+private var birth = Date()
+private var y = 0
+private var m = 0
+private var d = 0
+
 lateinit var listviewAdapter: ListViewAdapter
-lateinit var getterUid : String
-lateinit var getterToken : String
+lateinit var getterUid: String
+lateinit var getterToken: String
 
 class MyPageActivity : AppCompatActivity() {
 
@@ -75,13 +85,26 @@ class MyPageActivity : AppCompatActivity() {
 
             FirebaseRef.userLikeRef.child(uid).child(childUid).removeValue()
 
-            return@setOnItemLongClickListener(true)
+            return@setOnItemLongClickListener (true)
         }
 
         // 저기 내가 좋아요한 유저를 클릭하면은(Long Click)
         // 만약에 서로 좋아요한 사람이 아니면은, 메세지 못 보내도록 함
         // 메세지 보내기 창이 떠서 메세지를 보낼 수 있게 하고
         // 메세지 보내고 상대방에서 PUSH 알람 띄워주고
+        updateBtn.setOnClickListener {
+            val genderCheck = if (rbProfileSet_Male.isChecked) "남자" else "여자"
+
+            updateUserData(
+                uid,
+                myNickname.text.toString(),
+                myBirth.text.toString(),
+                genderCheck,
+                myLocation.text.toString()
+            )
+            finish()
+        }
+
     }
 
     private fun getMyData() {
@@ -92,9 +115,9 @@ class MyPageActivity : AppCompatActivity() {
                 val data = dataSnapshot.getValue(UserDataModel::class.java)
 
 //                myMessage.text = data!!.uid
-                myNickname.text = data!!.nickname
-                myBirth.text = data!!.birth.toString()
-                myLocation.text = data!!.location
+                myNickname.setText(data!!.nickname)
+                myBirth.setText(data!!.birth)
+                myLocation.setText(data!!.location)
 
                 //라디오버튼 성별 저장
                 if (data.gender == "여자") {
@@ -134,7 +157,8 @@ class MyPageActivity : AppCompatActivity() {
 
                 if (dataSnapshot.children.count() == 0) {
 
-                    Toast.makeText(this@MyPageActivity, "상대방이 좋아요한 사람이 아무도 없어요.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MyPageActivity, "상대방이 좋아요한 사람이 아무도 없어요.", Toast.LENGTH_LONG)
+                        .show()
 
                 } else {
 
@@ -218,7 +242,7 @@ class MyPageActivity : AppCompatActivity() {
     }
 
     //PUSH
-    private fun testPush(notification : PushNotification) = CoroutineScope(Dispatchers.IO).launch {
+    private fun testPush(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
 
         RetrofitInstance.api.postNotification(notification)
 
@@ -226,7 +250,7 @@ class MyPageActivity : AppCompatActivity() {
 
 
     // Dialog
-    private fun showDialog(){
+    private fun showDialog() {
 
         val mDialogView = LayoutInflater.from(this).inflate(R.layout.custom_dialog, null)
         val mBuilder = AlertDialog.Builder(this)
@@ -260,6 +284,7 @@ class MyPageActivity : AppCompatActivity() {
         // 누가 보냈는지
 
     }
+
     private fun userLikeCansle(myUid: String, otherUid: String) {
 
 
@@ -267,5 +292,60 @@ class MyPageActivity : AppCompatActivity() {
 
     }
 
+    private fun updateUserData(
+        uid: String,
+        nickname: String,
+        birth: String,
+        gender: String,
+        location: String
+    ) {
+        val genderCheck = if (rbProfileSet_Male.isChecked) "남자" else "여자"
+        val dbRef = FirebaseDatabase.getInstance().getReference("users").child(uid)
+        val userInfo =
+            UserDataModel(
+                dbRef.key.toString(),
+                myNickname.text.toString(),
+                myBirth.text.toString(),
+                genderCheck,
+                myLocation.text.toString()
+            )
+        dbRef.setValue(userInfo)
+            .addOnSuccessListener {
+                Toast.makeText(this, "수정완료", Toast.LENGTH_SHORT).show()
+            }
+
+    }
+    fun clickBirth(view: View?) {
+        val birthDate = myBirth!!.text.toString()
+        val birthDates = birthDate.split("\\.").toTypedArray()
+        var userYear: Int
+        var userMonth: Int
+        var userDate: Int
+        try {
+            userYear = birthDates[0].toInt()
+            userMonth = birthDates[1].toInt()
+            userDate = birthDates[2].toInt()
+        } catch (e: Exception) {
+            userYear = 1990
+            userMonth = 1
+            userDate = 1
+        }
+        val datePickerDialog = DatePickerDialog(
+            this,
+            android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+            { view, year, month, dayOfMonth ->
+                y = year
+                m = month + 1
+                d = dayOfMonth
+                birthTxt!!.text = "$y.$m.$d"
+            },
+            userYear,
+            userMonth - 1,
+            userDate
+        )
+        datePickerDialog.datePicker.calendarViewShown = false
+        datePickerDialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        datePickerDialog.show()
+    }
 
 }
