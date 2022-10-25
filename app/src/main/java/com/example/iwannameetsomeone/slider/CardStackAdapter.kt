@@ -35,7 +35,7 @@ class CardStackAdapter(val context: Context, val items: List<UserDataModel>) :
 
         val image = itemView.findViewById<ImageView>(R.id.profileImageArea)
         val nickname = itemView.findViewById<TextView>(R.id.itemNickname)
-        val birth = itemView.findViewById<TextView>(R.id.itemBirth)
+        val age = itemView.findViewById<TextView>(R.id.itemAge)
         val location = itemView.findViewById<TextView>(R.id.itemLocation)
 
 
@@ -53,21 +53,8 @@ class CardStackAdapter(val context: Context, val items: List<UserDataModel>) :
 
             })
             nickname.text = "닉네임: " + data.nickname
-            birth.text = "생년월일: " + data.birth
+            age.text = "나이: " + data.age
             location.text = "지역: " + data.location
         }
-    }
-    fun calculateAge(date: Date?): Int {
-        val birthCalendar = Calendar.getInstance()
-        birthCalendar.time = date ?: Date()
-        val current = Calendar.getInstance()
-        val currentYear = current[Calendar.YEAR]
-        val currentMonth = current[Calendar.MONTH]
-        val currentDay = current[Calendar.DAY_OF_MONTH]
-        var age = currentYear - birthCalendar[Calendar.YEAR]
-        if (birthCalendar[Calendar.MONTH] * 100 +
-            birthCalendar[Calendar.DAY_OF_MONTH] > currentMonth * 100 + currentDay
-        ) age--
-        return age
     }
 }

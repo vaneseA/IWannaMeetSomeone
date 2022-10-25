@@ -160,6 +160,17 @@
                 android:imeOptions="actionDone"
                 android:onClick="clickBirth"
                 android:padding="8dp" />
+            <TextView
+                android:id="@+id/ageTxt"
+                android:textSize="20sp"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edit_text_basic"
+                android:hint="나이"
+                android:padding="8dp" />
+
 
             <EditText
                 android:id="@+id/locationEdt"

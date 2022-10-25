@@ -38,6 +38,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 private val uid = FirebaseAuthUtils.getUid()
@@ -47,7 +49,6 @@ private val TAG = "MyPageActivity"
 private val likeUserListUid = mutableListOf<String>()
 private val likeUserList = mutableListOf<UserDataModel>()
 
-private var birth = Date()
 private var y = 0
 private var m = 0
 private var d = 0
@@ -118,6 +119,7 @@ class MyPageActivity : AppCompatActivity() {
                 uid,
                 myNickname.text.toString(),
                 myBirth.text.toString(),
+                myAge.text.toString(),
                 genderCheck,
                 myLocation.text.toString()
             )
@@ -134,9 +136,9 @@ class MyPageActivity : AppCompatActivity() {
                 Log.d(TAG, dataSnapshot.toString())
                 val data = dataSnapshot.getValue(UserDataModel::class.java)
 
-//                myMessage.text = data!!.uid
                 myNickname.setText(data!!.nickname)
                 myBirth.setText(data!!.birth)
+                myAge.setText(data!!.age)
                 myLocation.setText(data!!.location)
 
                 //라디오버튼 성별 저장
@@ -316,6 +318,7 @@ class MyPageActivity : AppCompatActivity() {
         uid: String,
         nickname: String,
         birth: String,
+        age: String,
         gender: String,
         location: String
     ) {
@@ -326,6 +329,7 @@ class MyPageActivity : AppCompatActivity() {
                 dbRef.key.toString(),
                 myNickname.text.toString(),
                 myBirth.text.toString(),
+                myAge.text.toString(),
                 genderCheck,
                 myLocation.text.toString()
             )
@@ -335,6 +339,7 @@ class MyPageActivity : AppCompatActivity() {
             }
 
     }
+
     fun clickBirth(view: View?) {
         val birthDate = myBirth!!.text.toString()
         val birthDates = birthDate.split("\\.").toTypedArray()
@@ -357,7 +362,18 @@ class MyPageActivity : AppCompatActivity() {
                 y = year
                 m = month + 1
                 d = dayOfMonth
-                birthTxt!!.text = "$y.$m.$d"
+                myBirth!!.text = "$y.$m.$d"
+                //나이로직
+                val birthDay: Calendar = Calendar.getInstance()
+                birthDay.set(y,m,d)
+
+                val today: Calendar = Calendar.getInstance()
+                var age: Int = today.get(Calendar.YEAR) - birthDay.get(Calendar.YEAR)
+
+                if (today.get(Calendar.DAY_OF_YEAR) < birthDay.get(Calendar.DAY_OF_YEAR))
+                    age--
+
+                myAge!!.text = age.toString() + "세"
             },
             userYear,
             userMonth - 1,
@@ -367,6 +383,7 @@ class MyPageActivity : AppCompatActivity() {
         datePickerDialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
         datePickerDialog.show()
     }
+
     private fun uploadImageForUpdate(uid: String) {
 
         val storage = Firebase.storage

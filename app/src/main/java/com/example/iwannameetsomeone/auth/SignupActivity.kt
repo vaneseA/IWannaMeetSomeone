@@ -6,6 +6,7 @@ import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.icu.text.SimpleDateFormat
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -28,7 +29,10 @@ import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_signup.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
+import java.util.logging.SimpleFormatter
 
 private val TAG = "SignupActivity"
 
@@ -36,7 +40,6 @@ private lateinit var auth: FirebaseAuth
 
 private var uid = ""
 private var location = ""
-private var birth = Date()
 private var nickname = ""
 private var y = 0
 private var m = 0
@@ -74,9 +77,9 @@ class SignupActivity : AppCompatActivity() {
             val pwd = findViewById<EditText>(R.id.passwordEdt)
             val gender = if (rbAccountMale.isChecked) "남자" else "여자"
             val birth = findViewById<TextView>(R.id.birthTxt).text.toString()
+            val age = findViewById<TextView>(R.id.ageTxt).text.toString()
             location = findViewById<EditText>(R.id.locationEdt).text.toString()
             nickname = findViewById<EditText>(R.id.nickEdt).text.toString()
-
 
             if (email.text?.isEmpty()!!) {
                 Toast.makeText(this, "email을 입력해주세요", Toast.LENGTH_SHORT).show()
@@ -117,6 +120,7 @@ class SignupActivity : AppCompatActivity() {
                                         uid,
                                         nickname,
                                         birth,
+                                        age,
                                         gender,
                                         location,
                                         token
@@ -196,14 +200,30 @@ class SignupActivity : AppCompatActivity() {
                 m = month + 1
                 d = dayOfMonth
                 birthTxt!!.text = "$y.$m.$d"
+//나이로직
+                val birthDay: Calendar = Calendar.getInstance()
+                birthDay.set(y, m, d)
+
+                val today: Calendar = Calendar.getInstance()
+                var age: Int = today.get(Calendar.YEAR) - birthDay.get(Calendar.YEAR)
+
+                if (today.get(Calendar.DAY_OF_YEAR) < birthDay.get(Calendar.DAY_OF_YEAR))
+                    age--
+
+                ageTxt!!.text = age.toString() + "세"
             },
             userYear,
             userMonth - 1,
             userDate
+
         )
+
+
         datePickerDialog.datePicker.calendarViewShown = false
         datePickerDialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
         datePickerDialog.show()
+
+
     }
 
 }

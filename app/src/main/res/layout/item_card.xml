@@ -27,11 +27,11 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/itemBirth"
+            android:id="@+id/itemAge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/jalnanche"
-            android:text="생년월일"
+            android:text="나이"
             android:textColor="@color/black"
             android:textSize="30sp"
             android:textStyle="bold" />
