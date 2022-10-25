@@ -46,13 +46,14 @@
             android:layout_marginTop="10dp">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/no" />
 da
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
                 android:fontFamily="@font/jalnanche"
                 android:text="싫어요"
                 android:textColor="@color/red"
@@ -89,13 +90,12 @@ da
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/jalnanche"
                 android:text="좋아요"
-                android:layout_marginRight="2dp"
                 android:textColor="@color/green"
                 android:textSize="18sp" />
 
             <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:src="@drawable/ok"
                 android:layout_marginEnd="5dp"/>
         </LinearLayout>
