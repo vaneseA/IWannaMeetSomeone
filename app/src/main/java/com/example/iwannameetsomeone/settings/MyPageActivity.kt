@@ -3,7 +3,6 @@ package com.example.iwannameetsomeone.settings
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -28,18 +27,16 @@ import com.example.iwannameetsomeone.utils.FirebaseRef
 import com.example.iwannameetsomeone.utils.MyInfo
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_my_page.*
-import kotlinx.android.synthetic.main.activity_signup.*
-import kotlinx.android.synthetic.main.item_card.*
+import kotlinx.android.synthetic.main.custom_delite_dialog.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 private val uid = FirebaseAuthUtils.getUid()
@@ -64,12 +61,12 @@ class MyPageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_page)
 
-        getMyData()
         val userListView = findViewById<ListView>(R.id.PepleWhoLikesMeListView)
 
         listviewAdapter = ListViewAdapter(this, likeUserList)
         userListView.adapter = listviewAdapter
 
+        getMyData()
 
         // 내가 좋아요한 사람들
         getMyLikeList()
@@ -90,22 +87,52 @@ class MyPageActivity : AppCompatActivity() {
             startActivityForResult(intent, 0)
         }
 
-        userListView.setOnItemClickListener { parent, view, position, id ->
+        userListView.setOnItemLongClickListener { parent, view, position, id ->
 
 //            Log.d(TAG, likeUserList[position].uid.toString())
             checkMatching(likeUserList[position].uid.toString())
             getterUid = likeUserList[position].uid.toString()
             getterToken = likeUserList[position].token.toString()
 
-            return@setOnItemClickListener
+            return@setOnItemLongClickListener (true)
         }
 
-        userListView.setOnItemLongClickListener { parent, view, position, id ->
+        userListView.setOnItemClickListener { parent, view, position, id ->
+
+            getterUid = likeUserList[position].uid.toString()
+
+            val allUid = FirebaseDatabase.getInstance()
+//            val userUid = allUid.getReference("/users/$getterUid").child()
+            val userUid =
+                allUid.getReference("users").child(getterUid).get().addOnSuccessListener {
+                    Log.d("LogTest", "${it.value}")
+                }
 
 
-            FirebaseRef.userLikeRef.child(uid).child(childUid).removeValue()
+            val mtDialogView = LayoutInflater.from(this).inflate(R.layout.custom_delite_dialog, null)
+            val mtBuilder = AlertDialog.Builder(this)
+                .setView(mtDialogView)
+                .setTitle("상대방 정보")
 
-            return@setOnItemLongClickListener (true)
+            val mtAlertDialog = mtBuilder.show()
+
+//            val data = DataSnapshot.getValue(UserDataModel::class.java)
+//
+//            myNickname.setText(data!!.nickname)
+            mtAlertDialog.cancelBtnArea.setOnClickListener {
+//            userLikeCansle(uid, childUid)
+                mtAlertDialog.dismiss()
+            }
+//            showUserDialog()
+
+
+
+            Toast.makeText(this, "test", Toast.LENGTH_LONG).show()
+
+//            FirebaseRef.userLikeRef.child(uid).child(childUid).removeValue()
+
+
+            return@setOnItemClickListener
         }
 
         // 저기 내가 좋아요한 유저를 클릭하면은(Long Click)
@@ -133,7 +160,7 @@ class MyPageActivity : AppCompatActivity() {
 
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                Log.d(TAG, dataSnapshot.toString())
+                Log.d("getMyData", dataSnapshot.toString())
                 val data = dataSnapshot.getValue(UserDataModel::class.java)
 
                 myNickname.setText(data!!.nickname)
@@ -169,6 +196,31 @@ class MyPageActivity : AppCompatActivity() {
         FirebaseRef.userInfoRef.child(uid).addValueEventListener(postListener)
     }
 
+    // 프로필 확인 및 취소 Dialog
+    private fun showUserDialog(userUid:String) {
+
+
+        val mtDialogView = LayoutInflater.from(this).inflate(R.layout.custom_delite_dialog, null)
+        val mtBuilder = AlertDialog.Builder(this)
+            .setView(mtDialogView)
+            .setTitle("상대방 정보")
+
+        val mtAlertDialog = mtBuilder.show()
+
+
+dialogAge.text = userUid
+        mtAlertDialog.cancelBtnArea.setOnClickListener {
+//            userLikeCansle(uid, childUid)
+            mtAlertDialog.dismiss()
+        }
+
+
+    }
+
+    //    private fun getUserData() {
+//
+//       dialogAge.text = items[position].nickname
+//    }
     private fun checkMatching(otherUid: String) {
 
         val postListener = object : ValueEventListener {
@@ -215,6 +267,10 @@ class MyPageActivity : AppCompatActivity() {
 
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                // 게시글 목록 비움
+                // -> 저장/삭제 마다 데이터 누적돼 게시글 중복으로 저장되는 것 방지
+                likeUserList.clear()
 
                 for (dataModel in dataSnapshot.children) {
                     // 내가 좋아요 한 사람들의 uid가  likeUserList에 들어있음
@@ -365,7 +421,7 @@ class MyPageActivity : AppCompatActivity() {
                 myBirth!!.text = "$y.$m.$d"
                 //나이로직
                 val birthDay: Calendar = Calendar.getInstance()
-                birthDay.set(y,m,d)
+                birthDay.set(y, m, d)
 
                 val today: Calendar = Calendar.getInstance()
                 var age: Int = today.get(Calendar.YEAR) - birthDay.get(Calendar.YEAR)
