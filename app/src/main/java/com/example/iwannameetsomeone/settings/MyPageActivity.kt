@@ -133,7 +133,10 @@ class MyPageActivity : AppCompatActivity() {
                     })
 
                     mtAlertDialog.cancelBtnArea.setOnClickListener {
-//            userLikeCansle(uid, childUid)
+            userLikeCansle(uid, getterUid)
+                        likeUserList.clear()
+                        Log.w("me",uid)
+                        Log.w("me",getterUid)
                         mtAlertDialog.dismiss()
                     }
                 }
@@ -205,31 +208,6 @@ class MyPageActivity : AppCompatActivity() {
         FirebaseRef.userInfoRef.child(uid).addValueEventListener(postListener)
     }
 
-    // 프로필 확인 및 취소 Dialog
-    private fun showUserDialog(userUid:String) {
-
-
-        val mtDialogView = LayoutInflater.from(this).inflate(R.layout.custom_delite_dialog, null)
-        val mtBuilder = AlertDialog.Builder(this)
-            .setView(mtDialogView)
-            .setTitle("상대방 정보")
-
-        val mtAlertDialog = mtBuilder.show()
-
-
-dialogAge.text = userUid
-        mtAlertDialog.cancelBtnArea.setOnClickListener {
-//            userLikeCansle(uid, childUid)
-            mtAlertDialog.dismiss()
-        }
-
-
-    }
-
-    //    private fun getUserData() {
-//
-//       dialogAge.text = items[position].nickname
-//    }
     private fun checkMatching(otherUid: String) {
 
         val postListener = object : ValueEventListener {
