@@ -38,6 +38,7 @@ import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import java.util.*
+import kotlin.collections.HashMap
 
 private val uid = FirebaseAuthUtils.getUid()
 private val childUid = FirebaseAuthUtils.getUid()
@@ -101,33 +102,41 @@ class MyPageActivity : AppCompatActivity() {
 
             getterUid = likeUserList[position].uid.toString()
 
-            val allUid = FirebaseDatabase.getInstance()
-//            val userUid = allUid.getReference("/users/$getterUid").child()
-            val userUid =
-                allUid.getReference("users").child(getterUid).get().addOnSuccessListener {
-                    Log.d("LogTest", "${it.value}")
-                }
+            val allUid = FirebaseDatabase.getInstance().reference
 
+                allUid.get().addOnSuccessListener {
+                    val map = it.child("users").child(getterUid).getValue() as HashMap<String,Any>
+                    val name = map.get("nickname").toString()
+                    val age = map.get("age").toString()
+                    val location = map.get("location").toString()
 
-            val mtDialogView = LayoutInflater.from(this).inflate(R.layout.custom_delite_dialog, null)
-            val mtBuilder = AlertDialog.Builder(this)
-                .setView(mtDialogView)
-                .setTitle("상대방 정보")
+                    val mtDialogView = LayoutInflater.from(this).inflate(R.layout.custom_delite_dialog, null)
+                    val mtBuilder = AlertDialog.Builder(this)
+                        .setView(mtDialogView)
+                        .setTitle("상대방 정보")
+                    val mtAlertDialog = mtBuilder.show()
 
-            val mtAlertDialog = mtBuilder.show()
+                    mtAlertDialog.dialogNickname.text = "닉네임: "+name
+                    mtAlertDialog.dialogAge.text = "나이: "+age
+                    mtAlertDialog.dialogLocation.text = "사는곳: "+location
 
-//            val data = DataSnapshot.getValue(UserDataModel::class.java)
-//
-//            myNickname.setText(data!!.nickname)
-            mtAlertDialog.cancelBtnArea.setOnClickListener {
+                    val storageRef = Firebase.storage.reference.child(getterUid + ".png")
+                    storageRef.downloadUrl.addOnCompleteListener(OnCompleteListener { task ->
+
+                        if (task.isSuccessful) {
+                            Glide.with(baseContext)
+                                .load(task.result)
+                                .into(mtAlertDialog.dialogProfileImageArea)
+
+                        }
+
+                    })
+
+                    mtAlertDialog.cancelBtnArea.setOnClickListener {
 //            userLikeCansle(uid, childUid)
-                mtAlertDialog.dismiss()
-            }
-//            showUserDialog()
-
-
-
-            Toast.makeText(this, "test", Toast.LENGTH_LONG).show()
+                        mtAlertDialog.dismiss()
+                    }
+                }
 
 //            FirebaseRef.userLikeRef.child(uid).child(childUid).removeValue()
 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <ImageView
+        android:id="@+id/dialogProfileImageArea"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:src="@mipmap/ic_launcher" />
+    <TextView
+        android:id="@+id/dialogNickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/jalnanche"
+        android:text="닉네임"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/dialogAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/jalnanche"
+        android:text="나이"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/dialogLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/jalnanche"
+        android:text="사는 곳"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+
+    <Button
+        android:id="@+id/cancelBtnArea"
+        android:text="좋아요 취소하기"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:fontFamily="@font/jalnanche"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/maincolor"
+        android:layout_margin="20dp"/>
+
+</LinearLayout>
