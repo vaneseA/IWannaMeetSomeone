@@ -41,7 +41,6 @@ import java.util.*
 import kotlin.collections.HashMap
 
 private val uid = FirebaseAuthUtils.getUid()
-private val childUid = FirebaseAuthUtils.getUid()
 
 private val TAG = "MyPageActivity"
 private val likeUserListUid = mutableListOf<String>()
@@ -90,7 +89,6 @@ class MyPageActivity : AppCompatActivity() {
 
         userListView.setOnItemLongClickListener { parent, view, position, id ->
 
-//            Log.d(TAG, likeUserList[position].uid.toString())
             checkMatching(likeUserList[position].uid.toString())
             getterUid = likeUserList[position].uid.toString()
             getterToken = likeUserList[position].token.toString()
@@ -104,42 +102,47 @@ class MyPageActivity : AppCompatActivity() {
 
             val allUid = FirebaseDatabase.getInstance().reference
 
-                allUid.get().addOnSuccessListener {
-                    val map = it.child("users").child(getterUid).getValue() as HashMap<String,Any>
-                    val name = map.get("nickname").toString()
-                    val age = map.get("age").toString()
-                    val location = map.get("location").toString()
+            allUid.get().addOnSuccessListener {
+                val map = it.child("users").child(getterUid).getValue() as HashMap<String, Any>
+                val name = map.get("nickname").toString()
+                val age = map.get("age").toString()
+                val location = map.get("location").toString()
 
-                    val mtDialogView = LayoutInflater.from(this).inflate(R.layout.custom_delite_dialog, null)
-                    val mtBuilder = AlertDialog.Builder(this)
-                        .setView(mtDialogView)
-                        .setTitle("상대방 정보")
-                    val mtAlertDialog = mtBuilder.show()
+                val mtDialogView =
+                    LayoutInflater.from(this).inflate(R.layout.custom_delite_dialog, null)
+                val mtBuilder = AlertDialog.Builder(this)
+                    .setView(mtDialogView)
+                    .setTitle("상대방 정보")
 
-                    mtAlertDialog.dialogNickname.text = "닉네임: "+name
-                    mtAlertDialog.dialogAge.text = "나이: "+age
-                    mtAlertDialog.dialogLocation.text = "사는곳: "+location
+                val mtAlertDialog = mtBuilder.show()
 
-                    val storageRef = Firebase.storage.reference.child(getterUid + ".png")
-                    storageRef.downloadUrl.addOnCompleteListener(OnCompleteListener { task ->
+                mtAlertDialog.dialogNickname.text = "닉네임: " + name
+                mtAlertDialog.dialogAge.text = "나이: " + age
+                mtAlertDialog.dialogLocation.text = "사는곳: " + location
 
-                        if (task.isSuccessful) {
-                            Glide.with(baseContext)
-                                .load(task.result)
-                                .into(mtAlertDialog.dialogProfileImageArea)
+                val storageRef = Firebase.storage.reference.child(getterUid + ".png")
+                storageRef.downloadUrl.addOnCompleteListener(OnCompleteListener { task ->
 
-                        }
+                    if (task.isSuccessful) {
+                        Glide.with(baseContext)
+                            .load(task.result)
+                            .into(mtAlertDialog.dialogProfileImageArea)
 
-                    })
-
-                    mtAlertDialog.cancelBtnArea.setOnClickListener {
-            userLikeCansle(uid, getterUid)
-                        likeUserList.clear()
-                        Log.w("me",uid)
-                        Log.w("me",getterUid)
-                        mtAlertDialog.dismiss()
                     }
+
+                })
+                mtAlertDialog.messageBtn.setOnClickListener {
+                    checkMatching(getterUid)
                 }
+                mtAlertDialog.backBtn.setOnClickListener {
+                    mtAlertDialog.dismiss()
+                }
+                mtAlertDialog.cancelBtnArea.setOnClickListener {
+                    userLikeCansle(uid, getterUid)
+                    likeUserList.clear()
+                    mtAlertDialog.dismiss()
+                }
+            }
 
 //            FirebaseRef.userLikeRef.child(uid).child(childUid).removeValue()
 
@@ -209,247 +212,255 @@ class MyPageActivity : AppCompatActivity() {
     }
 
     private fun checkMatching(otherUid: String) {
-
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                Log.d(TAG, otherUid)
-                Log.e(TAG, dataSnapshot.toString())
+                Log.d("dd", uid)
 
                 if (dataSnapshot.children.count() == 0) {
 
-                    Toast.makeText(this@MyPageActivity, "상대방이 좋아요한 사람이 아무도 없어요.", Toast.LENGTH_LONG)
+                    Toast.makeText(this@MyPageActivity, "메시지를 보낼 수 없습니다", Toast.LENGTH_LONG)
                         .show()
 
                 } else {
-
+                    var check = false
+                    // 데이터스냅샷 내 사용자 데이터 출력
                     for (dataModel in dataSnapshot.children) {
 
+                        // 다른 사용자가 좋아요 한 사용자 목록에
                         val likeUserKey = dataModel.key.toString()
-                        if (likeUserKey.equals(uid)) {
-                            Toast.makeText(this@MyPageActivity, "매칭이 되었습니다.", Toast.LENGTH_LONG)
+
+                        // 현재 사용자가 포함돼 있으면
+                        if (likeUserKey == uid) {
+
+                            Toast.makeText(this@MyPageActivity, "메세지를 보낼 수 있습니다", Toast.LENGTH_LONG)
                                 .show()
+                            // 메시지 입력창 띄움
+                            check = true
                             showDialog()
-                        } else {
-                            Toast.makeText(this@MyPageActivity, "매칭이 되지 않았습니다.", Toast.LENGTH_LONG)
-                                .show()
+                            break
                         }
+                    }
+                    if (check == false){
 
+                        Toast.makeText(this@MyPageActivity, "매칭되지 않아 메세지를 보낼 수 없습니다", Toast.LENGTH_LONG)
+                            .show()
                     }
 
+            }
+
+
+        }
+
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            // Getting Post failed, log a message
+            Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+        }
+    }
+    FirebaseRef.userLikeRef.child(otherUid).addValueEventListener(postListener)
+
+}
+
+private fun getMyLikeList() {
+
+    val postListener = object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+            // 게시글 목록 비움
+            // -> 저장/삭제 마다 데이터 누적돼 게시글 중복으로 저장되는 것 방지
+            likeUserList.clear()
+
+            for (dataModel in dataSnapshot.children) {
+                // 내가 좋아요 한 사람들의 uid가  likeUserList에 들어있음
+                likeUserListUid.add(dataModel.key.toString())
+            }
+            getUserDataList()
+
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            // Getting Post failed, log a message
+            Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+        }
+    }
+    FirebaseRef.userLikeRef.child(uid).addValueEventListener(postListener)
+
+}
+
+private fun getUserDataList() {
+
+    val postListener = object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+            for (dataModel in dataSnapshot.children) {
+
+                val user = dataModel.getValue(UserDataModel::class.java)
+
+                // 전체 유저중에 내가 좋아요한 사람들의 정보만 add함
+                if (likeUserListUid.contains(user?.uid)) {
+
+                    likeUserList.add(user!!)
                 }
 
             }
+            listviewAdapter.notifyDataSetChanged()
+            Log.d(TAG, likeUserList.toString())
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-            }
-        }
-        FirebaseRef.userLikeRef.child(otherUid).addValueEventListener(postListener)
-
-    }
-
-    private fun getMyLikeList() {
-
-        val postListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                // 게시글 목록 비움
-                // -> 저장/삭제 마다 데이터 누적돼 게시글 중복으로 저장되는 것 방지
-                likeUserList.clear()
-
-                for (dataModel in dataSnapshot.children) {
-                    // 내가 좋아요 한 사람들의 uid가  likeUserList에 들어있음
-                    likeUserListUid.add(dataModel.key.toString())
-                }
-                getUserDataList()
-
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-            }
-        }
-        FirebaseRef.userLikeRef.child(uid).addValueEventListener(postListener)
-
-    }
-
-    private fun getUserDataList() {
-
-        val postListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                for (dataModel in dataSnapshot.children) {
-
-                    val user = dataModel.getValue(UserDataModel::class.java)
-
-                    // 전체 유저중에 내가 좋아요한 사람들의 정보만 add함
-                    if (likeUserListUid.contains(user?.uid)) {
-
-                        likeUserList.add(user!!)
-                    }
-
-                }
-                listviewAdapter.notifyDataSetChanged()
-                Log.d(TAG, likeUserList.toString())
-
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-            }
-        }
-        FirebaseRef.userInfoRef.addValueEventListener(postListener)
-
-    }
-
-    //PUSH
-    private fun testPush(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
-
-        RetrofitInstance.api.postNotification(notification)
-
-    }
-
-
-    // Dialog
-    private fun showDialog() {
-
-        val mDialogView = LayoutInflater.from(this).inflate(R.layout.custom_dialog, null)
-        val mBuilder = AlertDialog.Builder(this)
-            .setView(mDialogView)
-            .setTitle("메세지 보내기")
-
-        val mAlertDialog = mBuilder.show()
-
-        val btn = mAlertDialog.findViewById<Button>(R.id.sendBtnArea)
-        val textArea = mAlertDialog.findViewById<EditText>(R.id.sendTextArea)
-        btn?.setOnClickListener {
-
-            val msgText = textArea!!.text.toString()
-
-            val mgsModel = MsgModel(MyInfo.myNickname, msgText)
-
-            FirebaseRef.userMsgRef.child(getterUid).push().setValue(mgsModel)
-
-            val notiModel = NotiModel(MyInfo.myNickname, msgText)
-
-            val pushModel = PushNotification(notiModel, getterToken)
-
-            testPush(pushModel)
-
-            mAlertDialog.dismiss()
         }
 
-        // message
-        // 받는 사람 uid
-        // Message
-        // 누가 보냈는지
-
-    }
-
-    private fun userLikeCansle(myUid: String, otherUid: String) {
-
-
-        FirebaseRef.userLikeRef.child(myUid).child(otherUid).removeValue()
-
-    }
-
-    private fun updateUserData(
-        uid: String,
-        nickname: String,
-        birth: String,
-        age: String,
-        gender: String,
-        location: String
-    ) {
-        val genderCheck = if (rbProfileSet_Male.isChecked) "남자" else "여자"
-        val dbRef = FirebaseDatabase.getInstance().getReference("users").child(uid)
-        val userInfo =
-            UserDataModel(
-                dbRef.key.toString(),
-                myNickname.text.toString(),
-                myBirth.text.toString(),
-                myAge.text.toString(),
-                genderCheck,
-                myLocation.text.toString()
-            )
-        dbRef.setValue(userInfo)
-            .addOnSuccessListener {
-                Toast.makeText(this, "수정완료", Toast.LENGTH_SHORT).show()
-            }
-
-    }
-
-    fun clickBirth(view: View?) {
-        val birthDate = myBirth!!.text.toString()
-        val birthDates = birthDate.split("\\.").toTypedArray()
-        var userYear: Int
-        var userMonth: Int
-        var userDate: Int
-        try {
-            userYear = birthDates[0].toInt()
-            userMonth = birthDates[1].toInt()
-            userDate = birthDates[2].toInt()
-        } catch (e: Exception) {
-            userYear = 1990
-            userMonth = 1
-            userDate = 1
+        override fun onCancelled(databaseError: DatabaseError) {
+            // Getting Post failed, log a message
+            Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
         }
-        val datePickerDialog = DatePickerDialog(
-            this,
-            android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-            { view, year, month, dayOfMonth ->
-                y = year
-                m = month + 1
-                d = dayOfMonth
-                myBirth!!.text = "$y.$m.$d"
-                //나이로직
-                val birthDay: Calendar = Calendar.getInstance()
-                birthDay.set(y, m, d)
+    }
+    FirebaseRef.userInfoRef.addValueEventListener(postListener)
 
-                val today: Calendar = Calendar.getInstance()
-                var age: Int = today.get(Calendar.YEAR) - birthDay.get(Calendar.YEAR)
+}
 
-                if (today.get(Calendar.DAY_OF_YEAR) < birthDay.get(Calendar.DAY_OF_YEAR))
-                    age--
+//PUSH
+private fun testPush(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
 
-                myAge!!.text = age.toString() + "세"
-            },
-            userYear,
-            userMonth - 1,
-            userDate
+    RetrofitInstance.api.postNotification(notification)
+
+}
+
+
+// Dialog
+private fun showDialog() {
+
+    val mDialogView = LayoutInflater.from(this).inflate(R.layout.custom_dialog, null)
+    val mBuilder = AlertDialog.Builder(this)
+        .setView(mDialogView)
+        .setTitle("메세지 보내기")
+
+    val mAlertDialog = mBuilder.show()
+
+    val btn = mAlertDialog.findViewById<Button>(R.id.sendBtnArea)
+    val textArea = mAlertDialog.findViewById<EditText>(R.id.sendTextArea)
+    btn?.setOnClickListener {
+
+        val msgText = textArea!!.text.toString()
+
+        val mgsModel = MsgModel(MyInfo.myNickname, msgText)
+
+        FirebaseRef.userMsgRef.child(getterUid).push().setValue(mgsModel)
+
+        val notiModel = NotiModel(MyInfo.myNickname, msgText)
+
+        val pushModel = PushNotification(notiModel, getterToken)
+
+        testPush(pushModel)
+
+        mAlertDialog.dismiss()
+    }
+
+    // message
+    // 받는 사람 uid
+    // Message
+    // 누가 보냈는지
+
+}
+
+private fun userLikeCansle(myUid: String, otherUid: String) {
+
+
+    FirebaseRef.userLikeRef.child(myUid).child(otherUid).removeValue()
+
+}
+
+private fun updateUserData(
+    uid: String,
+    nickname: String,
+    birth: String,
+    age: String,
+    gender: String,
+    location: String
+) {
+    val genderCheck = if (rbProfileSet_Male.isChecked) "남자" else "여자"
+    val dbRef = FirebaseDatabase.getInstance().getReference("users").child(uid)
+    val userInfo =
+        UserDataModel(
+            dbRef.key.toString(),
+            myNickname.text.toString(),
+            myBirth.text.toString(),
+            myAge.text.toString(),
+            genderCheck,
+            myLocation.text.toString()
         )
-        datePickerDialog.datePicker.calendarViewShown = false
-        datePickerDialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
-        datePickerDialog.show()
-    }
-
-    private fun uploadImageForUpdate(uid: String) {
-
-        val storage = Firebase.storage
-        val storageRef = storage.reference.child(uid + ".png")
-
-
-        // Get the data from an ImageView as bytes
-        myPageImg.isDrawingCacheEnabled = true
-        myPageImg.buildDrawingCache()
-        val bitmap = (myPageImg.drawable as BitmapDrawable).bitmap
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val data = baos.toByteArray()
-
-        var uploadTask = storageRef.putBytes(data)
-        uploadTask.addOnFailureListener {
-            // Handle unsuccessful uploads
-        }.addOnSuccessListener { taskSnapshot ->
-            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-            // ...
+    dbRef.setValue(userInfo)
+        .addOnSuccessListener {
+            Toast.makeText(this, "수정완료", Toast.LENGTH_SHORT).show()
         }
 
+}
 
+fun clickBirth(view: View?) {
+    val birthDate = myBirth!!.text.toString()
+    val birthDates = birthDate.split("\\.").toTypedArray()
+    var userYear: Int
+    var userMonth: Int
+    var userDate: Int
+    try {
+        userYear = birthDates[0].toInt()
+        userMonth = birthDates[1].toInt()
+        userDate = birthDates[2].toInt()
+    } catch (e: Exception) {
+        userYear = 1990
+        userMonth = 1
+        userDate = 1
     }
+    val datePickerDialog = DatePickerDialog(
+        this,
+        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+        { view, year, month, dayOfMonth ->
+            y = year
+            m = month + 1
+            d = dayOfMonth
+            myBirth!!.text = "$y.$m.$d"
+            //나이로직
+            val birthDay: Calendar = Calendar.getInstance()
+            birthDay.set(y, m, d)
+
+            val today: Calendar = Calendar.getInstance()
+            var age: Int = today.get(Calendar.YEAR) - birthDay.get(Calendar.YEAR)
+
+            if (today.get(Calendar.DAY_OF_YEAR) < birthDay.get(Calendar.DAY_OF_YEAR))
+                age--
+
+            myAge!!.text = age.toString() + "세"
+        },
+        userYear,
+        userMonth - 1,
+        userDate
+    )
+    datePickerDialog.datePicker.calendarViewShown = false
+    datePickerDialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+    datePickerDialog.show()
+}
+
+private fun uploadImageForUpdate(uid: String) {
+
+    val storage = Firebase.storage
+    val storageRef = storage.reference.child(uid + ".png")
+
+
+    // Get the data from an ImageView as bytes
+    myPageImg.isDrawingCacheEnabled = true
+    myPageImg.buildDrawingCache()
+    val bitmap = (myPageImg.drawable as BitmapDrawable).bitmap
+    val baos = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    val data = baos.toByteArray()
+
+    var uploadTask = storageRef.putBytes(data)
+    uploadTask.addOnFailureListener {
+        // Handle unsuccessful uploads
+    }.addOnSuccessListener { taskSnapshot ->
+        // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+        // ...
+    }
+
+
+}
 
 }
