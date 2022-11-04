@@ -46,12 +46,27 @@
         android:src="@mipmap/ic_launcher" />
 
     <ImageView
-android:id="@+id/imgChangeBtn"
+        android:id="@+id/imgChangeBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignRight="@id/myPageImg"
         android:layout_alignBottom="@id/myPageImg"
         android:src="@drawable/camera" />
+
+    <Button
+        android:id="@+id/LogoutBtn2"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_alignLeft="@id/myLocation"
+        android:layout_alignTop="@id/imgChangeBtn"
+        android:layout_marginLeft="69dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/maincolor"
+        android:fontFamily="@font/jalnanche"
+        android:text="logout"
+        android:textColor="@color/white">
+
+    </Button>
 
     <EditText
         android:id="@+id/myNickname"
@@ -151,8 +166,8 @@ android:id="@+id/imgChangeBtn"
         android:clickable="true"
         android:ems="11"
         android:gravity="center_vertical"
-        android:text="지역"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:text="지역" />
 
 
     <LinearLayout

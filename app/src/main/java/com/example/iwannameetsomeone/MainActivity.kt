@@ -52,13 +52,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        LogoutBtn2.setOnClickListener {
 
-            val auth = Firebase.auth
-            auth.signOut()
-
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
 
         myInfo.setOnClickListener {
 
@@ -233,7 +227,7 @@ class MainActivity : AppCompatActivity() {
         var builder = NotificationCompat.Builder(this, "Test_Channel")
             .setSmallIcon(R.drawable.ic_launcher_background)
             .setContentTitle("매칭완료")
-            .setContentText("매칭이 완료되었습니다. 저사람도 나를 좋아해요.")
+            .setContentText("매칭이 완료되었습니다.")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         with(NotificationManagerCompat.from(this)) {
             notify(123, builder.build())
