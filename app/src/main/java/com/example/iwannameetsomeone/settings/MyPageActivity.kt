@@ -15,7 +15,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
 import com.example.iwannameetsomeone.Adapter.ListViewAdapter
+import com.example.iwannameetsomeone.MainActivity
 import com.example.iwannameetsomeone.Message.MsgModel
+import com.example.iwannameetsomeone.Message.MyMsgActivity
 import com.example.iwannameetsomeone.Message.fcm.NotiModel
 import com.example.iwannameetsomeone.Message.fcm.PushNotification
 import com.example.iwannameetsomeone.Message.fcm.RetrofitInstance
@@ -68,6 +70,7 @@ class MyPageActivity : AppCompatActivity() {
         listviewAdapter = ListViewAdapter(this, likeUserList)
         userListView.adapter = listviewAdapter
 
+
         getMyData()
 
         // 내가 좋아요한 사람들
@@ -75,6 +78,11 @@ class MyPageActivity : AppCompatActivity() {
 
         // 전체 유저 중에서, 내가 좋아요한 사람들 가져와서
         // 이 사람이 나와 매칭이 되어있는지 확인
+
+        messageBox.setOnClickListener {
+
+            startActivity(Intent(this, MyMsgActivity::class.java))
+        }
         LogoutBtn2.setOnClickListener {
 
             val auth = Firebase.auth
@@ -146,8 +154,10 @@ class MyPageActivity : AppCompatActivity() {
                 }
                 mtAlertDialog.cancelBtnArea.setOnClickListener {
                     userLikeCansle(uid, getterUid)
-                    likeUserList.clear()
                     mtAlertDialog.dismiss()
+                    Toast.makeText(this@MyPageActivity, "좋아요를 취소했습니다.", Toast.LENGTH_LONG)
+                        .show()
+                    startActivity(Intent(this, MainActivity::class.java))
                 }
             }
 
@@ -182,7 +192,6 @@ class MyPageActivity : AppCompatActivity() {
 
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                Log.d("getMyData", dataSnapshot.toString())
                 val data = dataSnapshot.getValue(UserDataModel::class.java)
 
                 myNickname.setText(data!!.nickname)

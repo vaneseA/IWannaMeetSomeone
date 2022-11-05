@@ -34,6 +34,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_my_page.*
 
 class MainActivity : AppCompatActivity() {
+    private val likeUserList = mutableListOf<UserDataModel>()
 
     lateinit var cardStackAdapter: CardStackAdapter
     lateinit var manager: CardStackLayoutManager
@@ -140,11 +141,14 @@ class MainActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                 for (dataModel in dataSnapshot.children) {
-
+                    val likeUserKey = dataModel.key.toString()
                     val user = dataModel.getValue(UserDataModel::class.java)
 
                     if (user!!.gender.toString().equals(curruntUserGender)) {
-
+//                        Log.d("wwwuser", user.toString())
+//                        Log.d("wwwlikeUserKey", likeUserKey)
+//                    } else if (likeUserKey == user.uid) {
+//                        Log.d("wwwuseruid", user.uid)
                     } else {
 
                         usersDataList.add(user!!)
@@ -188,7 +192,7 @@ class MainActivity : AppCompatActivity() {
                 for (dataModel in dataSnapshot.children) {
 
                     val likeUserKey = dataModel.key.toString()
-                    if(likeUserKey.equals(uid)){
+                    if (likeUserKey.equals(uid)) {
                         Toast.makeText(this@MainActivity, "매칭 완료", Toast.LENGTH_SHORT).show()
                         createNotificationChannel()
                         sendNotification()
@@ -223,7 +227,8 @@ class MainActivity : AppCompatActivity() {
             notificationManager.createNotificationChannel(channel)
         }
     }
-    private fun sendNotification(){
+
+    private fun sendNotification() {
         var builder = NotificationCompat.Builder(this, "Test_Channel")
             .setSmallIcon(R.drawable.ic_launcher_background)
             .setContentTitle("매칭완료")
