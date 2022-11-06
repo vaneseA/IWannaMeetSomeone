@@ -91,7 +91,13 @@ class MyPageActivity : AppCompatActivity() {
 
             val auth = Firebase.auth
             auth.signOut()
+
+            // '새 작업(task) 시작' 또는 '시작하려는 액티비티보다 상위에 존재하는 액티비티 삭제'
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
             startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+
         }
         val getAction = registerForActivityResult(
             ActivityResultContracts.GetContent(),
@@ -151,6 +157,8 @@ class MyPageActivity : AppCompatActivity() {
                 })
                 mtAlertDialog.messageBtn.setOnClickListener {
                     checkMatching(getterUid)
+                    getterUid = likeUserList[position].uid.toString()
+                    getterToken = likeUserList[position].token.toString()
                 }
                 mtAlertDialog.profileDialogBackBtn.setOnClickListener {
                     mtAlertDialog.dismiss()
@@ -196,6 +204,8 @@ class MyPageActivity : AppCompatActivity() {
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val data = dataSnapshot.getValue(UserDataModel::class.java)
+
+
 
                 myNickname.setText(data!!.nickname)
                 myBirth.setText(data!!.birth)
@@ -289,16 +299,17 @@ class MyPageActivity : AppCompatActivity() {
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                // 게시글 목록 비움
-                // -> 저장/삭제 마다 데이터 누적돼 게시글 중복으로 저장되는 것 방지
+//                      게시글 목록 비움
+//                      -> 저장/삭제 마다 데이터 누적돼 게시글 중복으로 저장되는 것 방지
                 likeUserList.clear()
-
                 for (dataModel in dataSnapshot.children) {
                     // 내가 좋아요 한 사람들의 uid가  likeUserList에 들어있음
                     likeUserListUid.add(dataModel.key.toString())
                 }
-                getUserDataList()
 
+                listviewAdapter.notifyDataSetChanged()
+
+                getUserDataList()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -367,7 +378,8 @@ class MyPageActivity : AppCompatActivity() {
             val btn = mAlertDialog.findViewById<Button>(R.id.sendBtnArea)
             val textArea = mAlertDialog.findViewById<EditText>(R.id.sendTextArea)
 
-            mAlertDialog.dialogBackBtn.setOnClickListener { mAlertDialog.dismiss()}
+            mAlertDialog.dialogBackBtn.setOnClickListener { mAlertDialog.dismiss() }
+
             btn?.setOnClickListener {
 
                 val msgText = textArea!!.text.toString()
@@ -385,7 +397,10 @@ class MyPageActivity : AppCompatActivity() {
 
                 testPush(pushModel)
 
+                Toast.makeText(this@MyPageActivity, "메세지를 전송헀습니다", Toast.LENGTH_LONG)
+                    .show()
                 mAlertDialog.dismiss()
+
             }
 
             // message
