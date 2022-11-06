@@ -34,7 +34,7 @@ class MyMsgActivity : AppCompatActivity() {
         msgListView.adapter = msgListviewAdapter
 
         getMyMsg()
-        backBtn.setOnClickListener { finish() }
+        messgeBoxBackBtn.setOnClickListener { finish() }
     }
 
 

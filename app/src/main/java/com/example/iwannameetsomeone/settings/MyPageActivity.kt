@@ -31,11 +31,11 @@ import com.example.iwannameetsomeone.utils.MyInfo
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_my_page.*
 import kotlinx.android.synthetic.main.custom_delite_dialog.*
+import kotlinx.android.synthetic.main.custom_dialog.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -79,8 +79,12 @@ class MyPageActivity : AppCompatActivity() {
         // 전체 유저 중에서, 내가 좋아요한 사람들 가져와서
         // 이 사람이 나와 매칭이 되어있는지 확인
 
-        messageBox.setOnClickListener {
+        backToTheMain.setOnClickListener {
+            finish()
+            startActivity(Intent(this, MainActivity::class.java))
+        }
 
+        messageBox.setOnClickListener {
             startActivity(Intent(this, MyMsgActivity::class.java))
         }
         LogoutBtn2.setOnClickListener {
@@ -127,7 +131,6 @@ class MyPageActivity : AppCompatActivity() {
                     LayoutInflater.from(this).inflate(R.layout.custom_delite_dialog, null)
                 val mtBuilder = AlertDialog.Builder(this)
                     .setView(mtDialogView)
-                    .setTitle("상대방 정보")
 
                 val mtAlertDialog = mtBuilder.show()
 
@@ -149,7 +152,7 @@ class MyPageActivity : AppCompatActivity() {
                 mtAlertDialog.messageBtn.setOnClickListener {
                     checkMatching(getterUid)
                 }
-                mtAlertDialog.backBtn.setOnClickListener {
+                mtAlertDialog.profileDialogBackBtn.setOnClickListener {
                     mtAlertDialog.dismiss()
                 }
                 mtAlertDialog.cancelBtnArea.setOnClickListener {
@@ -347,38 +350,49 @@ class MyPageActivity : AppCompatActivity() {
 
     // Dialog
     private fun showDialog() {
+        val allUid = FirebaseDatabase.getInstance().reference
+        allUid.get().addOnSuccessListener {
+            val map = it.child("users").child(getterUid).getValue() as HashMap<String, Any>
+            val name = map.get("nickname").toString()
 
-        val mDialogView = LayoutInflater.from(this).inflate(R.layout.custom_dialog, null)
-        val mBuilder = AlertDialog.Builder(this)
-            .setView(mDialogView)
-            .setTitle("메세지 보내기")
+            val mDialogView = LayoutInflater.from(this).inflate(R.layout.custom_dialog, null)
+            val mBuilder = AlertDialog.Builder(this)
+                .setView(mDialogView)
 
-        val mAlertDialog = mBuilder.show()
 
-        val btn = mAlertDialog.findViewById<Button>(R.id.sendBtnArea)
-        val textArea = mAlertDialog.findViewById<EditText>(R.id.sendTextArea)
-        btn?.setOnClickListener {
+            val mAlertDialog = mBuilder.show()
 
-            val msgText = textArea!!.text.toString()
+            mAlertDialog.toNick.text = "$name" + "님에게 메세지를 보냅니다."
 
-            val mgsModel = MsgModel(MyInfo.myNickname, msgText)
+            val btn = mAlertDialog.findViewById<Button>(R.id.sendBtnArea)
+            val textArea = mAlertDialog.findViewById<EditText>(R.id.sendTextArea)
 
-            FirebaseRef.userMsgRef.child(getterUid).push().setValue(mgsModel)
+            mAlertDialog.dialogBackBtn.setOnClickListener { mAlertDialog.dismiss()}
+            btn?.setOnClickListener {
 
-            val notiModel = NotiModel(MyInfo.myNickname, msgText)
+                val msgText = textArea!!.text.toString()
 
-            val pushModel = PushNotification(notiModel, getterToken)
+//            val senderInfo =
 
-            testPush(pushModel)
 
-            mAlertDialog.dismiss()
+                val msgModel = MsgModel(MyInfo.myNickname, msgText)
+
+                FirebaseRef.userMsgRef.child(getterUid).push().setValue(msgModel)
+
+                val notiModel = NotiModel(MyInfo.myNickname, msgText)
+
+                val pushModel = PushNotification(notiModel, getterToken)
+
+                testPush(pushModel)
+
+                mAlertDialog.dismiss()
+            }
+
+            // message
+            // 받는 사람 uid
+            // Message
+            // 누가 보냈는지
         }
-
-        // message
-        // 받는 사람 uid
-        // Message
-        // 누가 보냈는지
-
     }
 
     private fun userLikeCansle(myUid: String, otherUid: String) {

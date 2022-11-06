@@ -4,6 +4,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/tbAccount"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/maincolor">
+
+        <TextView
+            android:id="@+id/toNick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/jalnanche"
+            android:text="000님에게 메세지를 보냅니다."
+            android:textColor="@color/white"
+            android:textSize="18dp" />
+
+        <ImageView
+            android:id="@+id/dialogBackBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/ic_baseline_clear_24" />
+    </com.google.android.material.appbar.MaterialToolbar>
+
     <EditText
         android:id="@+id/sendTextArea"
         android:layout_width="match_parent"
@@ -11,6 +38,17 @@
         android:layout_margin="20dp"
         android:background="@android:color/transparent"
         android:hint="텍스트를 입력하세요" />
+
+    <TextView
+        android:id="@+id/fromNick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginRight="100dp"
+        android:fontFamily="@font/jalnanche"
+        android:text="From: ">
+
+    </TextView>
 
     <Button
         android:id="@+id/sendBtnArea"

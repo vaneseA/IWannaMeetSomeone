@@ -54,32 +54,45 @@
         android:src="@drawable/camera" />
 
     <Button
+        android:id="@+id/messageBox"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_alignLeft="@id/myLocation"
+        android:layout_alignTop="@id/LogoutBtn2"
+        android:layout_marginLeft="34dp"
+        android:layout_marginTop="-46dp"
+        android:background="@color/maincolor"
+        android:fontFamily="@font/jalnanche"
+        android:text="쪽지함"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/backToTheMain"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_alignLeft="@id/myLocation"
+        android:layout_alignTop="@id/imgChangeBtn"
+        android:layout_marginLeft="34dp"
+        android:layout_marginTop="-91dp"
+        android:background="@color/maincolor"
+        android:fontFamily="@font/jalnanche"
+        android:text="추원회원"
+        android:textColor="@color/white"/>
+
+    <Button
         android:id="@+id/LogoutBtn2"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_alignLeft="@id/myLocation"
         android:layout_alignTop="@id/imgChangeBtn"
-        android:layout_marginLeft="-3dp"
-        android:layout_marginTop="-13dp"
+        android:layout_marginLeft="34dp"
+        android:layout_marginTop="-1dp"
         android:background="@color/maincolor"
         android:fontFamily="@font/jalnanche"
         android:text="logout"
         android:textColor="@color/white">
 
     </Button>
-
-    <Button
-        android:id="@+id/messageBox"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_alignLeft="@id/myLocation"
-        android:layout_alignTop="@id/LogoutBtn2"
-        android:layout_marginLeft="-3dp"
-        android:layout_marginTop="-56dp"
-        android:background="@color/maincolor"
-        android:fontFamily="@font/jalnanche"
-        android:text="쪽지함"
-        android:textColor="@color/white" />
 
     <EditText
         android:id="@+id/myNickname"
