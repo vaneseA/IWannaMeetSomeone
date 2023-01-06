@@ -69,6 +69,41 @@ class MyPageActivity : AppCompatActivity() {
 
         listviewAdapter = ListViewAdapter(this, likeUserList)
         userListView.adapter = listviewAdapter
+//      스피너 선언
+        val spinner = findViewById<Spinner>(R.id.myLocationSpinner)
+        spinner.adapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.itemList,
+            android.R.layout.simple_spinner_item
+        )
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+
+                //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작하게 됩니다.
+                when (position) {
+                    0 -> {
+
+                    }
+                    1 -> {
+
+                    }
+                    //...
+                    else -> {
+
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+
+            }
+        }
+
 
 
         getMyData()
@@ -191,7 +226,7 @@ class MyPageActivity : AppCompatActivity() {
                 myBirth.text.toString(),
                 myAge.text.toString(),
                 genderCheck,
-                myLocation.text.toString()
+                spinner.toString()
             )
             uploadImageForUpdate(uid)
             finish()
@@ -210,7 +245,7 @@ class MyPageActivity : AppCompatActivity() {
                 myNickname.setText(data!!.nickname)
                 myBirth.setText(data!!.birth)
                 myAge.setText(data!!.age)
-                myLocation.setText(data!!.location)
+//                myLocation.setText(data!!.location)
 
                 //라디오버튼 성별 저장
                 if (data.gender == "여자") {
@@ -434,7 +469,7 @@ class MyPageActivity : AppCompatActivity() {
                 myBirth.text.toString(),
                 myAge.text.toString(),
                 genderCheck,
-                myLocation.text.toString()
+                myLocationSpinner.toString()
             )
         dbRef.setValue(userInfo)
             .addOnSuccessListener {

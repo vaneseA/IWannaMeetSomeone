@@ -39,6 +39,7 @@ class CardStackAdapter(val context: Context, val items: List<UserDataModel>) :
 
     override fun onBindViewHolder(holder: CardStackAdapter.ViewHolder, position: Int) {
         holder.binding(items[position])
+
     }
 
     override fun getItemCount(): Int {
