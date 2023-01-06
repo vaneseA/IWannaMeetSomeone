@@ -140,9 +140,9 @@ class MyPageActivity : AppCompatActivity() {
 
                 val mtAlertDialog = mtBuilder.show()
 
-                mtAlertDialog.dialogNickname.text = "닉네임: " + name
-                mtAlertDialog.dialogAge.text = "나이: " + age
-                mtAlertDialog.dialogLocation.text = "사는곳: " + location
+                mtAlertDialog.dialogNickname.text = name
+                mtAlertDialog.dialogAge.text = ", " + age
+                mtAlertDialog.dialogLocation.text = location
 
                 val storageRef = Firebase.storage.reference.child(getterUid + ".png")
                 storageRef.downloadUrl.addOnCompleteListener(OnCompleteListener { task ->

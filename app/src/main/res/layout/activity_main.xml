@@ -47,7 +47,7 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:src="@drawable/no" />
+                android:src="@drawable/like_grey" />
 da
             <TextView
                 android:layout_width="wrap_content"
@@ -95,7 +95,7 @@ da
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/ok"
+                android:src="@drawable/like_red"
                 android:layout_marginEnd="5dp"/>
         </LinearLayout>
 

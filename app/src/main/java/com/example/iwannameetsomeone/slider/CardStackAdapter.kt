@@ -67,9 +67,9 @@ class CardStackAdapter(val context: Context, val items: List<UserDataModel>) :
                     }
 
                 })
-                nickname.text = "닉네임: " + data.nickname
-                age.text = "나이: " + data.age
-                location.text = "지역: " + data.location
+                nickname.text =data.nickname
+                age.text = ", " + data.age
+                location.text =  data.location
             }
         }
     }
