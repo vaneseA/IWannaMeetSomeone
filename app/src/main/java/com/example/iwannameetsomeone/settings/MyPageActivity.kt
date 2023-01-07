@@ -70,13 +70,13 @@ class MyPageActivity : AppCompatActivity() {
         listviewAdapter = ListViewAdapter(this, likeUserList)
         userListView.adapter = listviewAdapter
 //      스피너 선언
-        val spinner = findViewById<Spinner>(R.id.myLocationSpinner)
-        spinner.adapter = ArrayAdapter.createFromResource(
+        val locationSpinner = findViewById<Spinner>(R.id.myLocationSpinner)
+        locationSpinner.adapter = ArrayAdapter.createFromResource(
             this,
             R.array.itemList,
             android.R.layout.simple_spinner_item
         )
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        locationSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View,
@@ -103,7 +103,40 @@ class MyPageActivity : AppCompatActivity() {
 
             }
         }
+//      스피너 선언
+        val jobSpinner = findViewById<Spinner>(R.id.myJobSpinner)
+        jobSpinner.adapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.jobItemList,
+            android.R.layout.simple_spinner_item
+        )
+        jobSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
 
+                //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작하게 됩니다.
+                when (position) {
+                    0 -> {
+
+                    }
+                    1 -> {
+
+                    }
+                    //...
+                    else -> {
+
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+
+            }
+        }
 
 
         getMyData()
@@ -226,7 +259,7 @@ class MyPageActivity : AppCompatActivity() {
                 myBirth.text.toString(),
                 myAge.text.toString(),
                 genderCheck,
-                spinner.toString()
+                myLocationSpinner.toString()
             )
             uploadImageForUpdate(uid)
             finish()

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="jobItemList">
+        <item>회사원</item>
+        <item>공무원/공기업</item>
+        <item>사업가</item>
+        <item>서비스직</item>
+        <item>전문직</item>
+        <item>학생</item>
+        <item>무직</item>
+
+    </string-array>
+</resources>

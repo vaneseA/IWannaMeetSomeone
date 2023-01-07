@@ -57,8 +57,8 @@
         android:id="@+id/messageBox"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:layout_alignLeft="@id/myLocationSpinner"
         android:layout_alignTop="@id/LogoutBtn2"
+        android:layout_alignRight="@+id/myJobSpinner"
         android:layout_marginLeft="34dp"
         android:layout_marginTop="-46dp"
         android:background="@color/maincolor"
@@ -70,20 +70,20 @@
         android:id="@+id/backToTheMain"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:layout_alignLeft="@id/myLocationSpinner"
+        android:layout_alignRight="@+id/myJobSpinner"
         android:layout_alignTop="@id/imgChangeBtn"
         android:layout_marginLeft="34dp"
         android:layout_marginTop="-91dp"
         android:background="@color/maincolor"
         android:fontFamily="@font/jalnanche"
         android:text="추원회원"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/LogoutBtn2"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:layout_alignLeft="@id/myLocationSpinner"
+        android:layout_alignRight="@+id/myJobSpinner"
         android:layout_alignTop="@id/imgChangeBtn"
         android:layout_marginLeft="34dp"
         android:layout_marginTop="-1dp"
@@ -96,7 +96,7 @@
 
     <EditText
         android:id="@+id/myNickname"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/myPageImg"
         android:layout_marginLeft="16dp"
@@ -113,8 +113,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/myNickname"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_toRightOf="@id/myNickname"
+        android:layout_toRightOf="@id/myLocationSpinner"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -149,7 +148,7 @@
 
     <TextView
         android:id="@+id/myBirth"
-        android:layout_width="140dp"
+        android:layout_width="120dp"
         android:layout_height="44dp"
         android:layout_below="@id/myNickname"
         android:layout_marginLeft="16dp"
@@ -176,25 +175,39 @@
         android:clickable="true"
         android:ems="11"
         android:gravity="center_vertical"
-        android:text="나이"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:text="나이" />
 
     <Spinner
         android:id="@+id/myLocationSpinner"
-        android:layout_width="95dp"
+        android:layout_width="110dp"
         android:layout_height="44dp"
-        android:layout_below="@id/myNickname"
+        android:layout_below="@id/myPageImg"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:layout_toRightOf="@id/myNickname"
+        android:background="@drawable/bg_edit_text_create_activity"
+        android:clickable="true"
+        android:ems="11"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:spinnerMode="dialog" />
+
+    <Spinner
+        android:id="@+id/myJobSpinner"
+        android:layout_width="140dp"
+        android:layout_height="44dp"
+        android:layout_below="@id/myLocationSpinner"
+        android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_toRightOf="@id/myAge"
         android:background="@drawable/bg_edit_text_create_activity"
         android:clickable="true"
         android:ems="11"
         android:gravity="center_vertical"
         android:padding="10dp"
-        android:text="지역" />
-
+        android:spinnerMode="dialog" />
 
 
     <LinearLayout
@@ -202,8 +215,9 @@
         android:layout_height="320dp"
         android:layout_alignTop="@id/myLocationSpinner"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="180dp"
         android:layout_marginRight="16dp"
+        android:layout_below="@id/PepleWhoLikesMeMessage"
         android:background="@drawable/bg_edit_text_basic"
         android:orientation="vertical">
 
@@ -211,7 +225,6 @@
             android:id="@+id/PepleWhoLikesMeListView"
             android:layout_width="match_parent"
             android:layout_height="309dp"
-            android:layout_below="@id/PepleWhoLikesMeMessage"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:hint="나를 찜한 회원 리스트"
@@ -221,11 +234,11 @@
 
     <TextView
         android:id="@+id/PepleWhoLikesMeMessage"
-        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/myLocationSpinner"
+        android:layout_below="@id/myBirth"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="16dp"
         android:fontFamily="@font/jalnanche"
         android:gravity="center"
