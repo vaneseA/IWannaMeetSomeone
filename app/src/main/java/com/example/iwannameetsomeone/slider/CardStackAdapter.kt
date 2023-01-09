@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.iwannameetsomeone.R
 import com.example.iwannameetsomeone.auth.UserDataModel
-import com.example.iwannameetsomeone.settings.listviewAdapter
+
 
 import com.example.iwannameetsomeone.utils.FirebaseAuthUtils
 import com.example.iwannameetsomeone.utils.FirebaseRef

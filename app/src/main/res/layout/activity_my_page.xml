@@ -208,37 +208,21 @@
         android:padding="10dp"
         android:spinnerMode="dialog" />
 
-
-    <LinearLayout
+    <fragment
+        android:id="@+id/fragmentContainerView"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph="@navigation/mypage_nav"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:layout_below="@id/PepleWhoLikesMeMessage"
-        android:layout_alignTop="@id/myLocationSpinner"
-        android:layout_marginTop="180dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_marginTop="380dp"
+        />
 
-        <ListView
-            android:id="@+id/PepleWhoLikesMeListView"
-            android:layout_width="match_parent"
-            android:layout_height="309dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:hint="나를 찜한 회원 리스트"
-            android:padding="10dp" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/PepleWhoLikesMeMessage"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/myBirth"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="16dp"
-        android:fontFamily="@font/jalnanche"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="내가 찜한 회원" />
+        android:background="@color/white"
+        android:layout_marginTop="320dp"
+        app:menu="@menu/bottom_nav_menu" />
 
 </RelativeLayout>

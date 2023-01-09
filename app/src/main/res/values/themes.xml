@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.IWannaMeetSomeone" parent="Theme.AppCompat.Light">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimary">@color/maincolor</item>
         <item name="colorPrimaryVariant">@color/maincolor</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->

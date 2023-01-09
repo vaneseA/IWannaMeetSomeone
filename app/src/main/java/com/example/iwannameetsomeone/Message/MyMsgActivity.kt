@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ListView
 import com.example.iwannameetsomeone.R
-import com.example.iwannameetsomeone.settings.listviewAdapter
 import com.example.iwannameetsomeone.utils.FirebaseAuthUtils
 import com.example.iwannameetsomeone.utils.FirebaseRef
 import com.google.firebase.database.DataSnapshot
@@ -64,7 +63,7 @@ class MyMsgActivity : AppCompatActivity() {
                 msgList.reverse()
 
                 // 동기화(새로고침) -> 리스트 크기 및 아이템 변화를 어댑터에 알림
-                listviewAdapter.notifyDataSetChanged()
+//                listviewAdapter.notifyDataSetChanged()
 
             }
 
