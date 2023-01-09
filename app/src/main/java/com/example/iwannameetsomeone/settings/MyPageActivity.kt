@@ -105,9 +105,7 @@ class MyPageActivity : AppCompatActivity() {
         // 이 사람이 나와 매칭이 되어있는지 확인
 
         backToTheMain.setOnClickListener {
-            finish()
-            startActivity(Intent(this, MainActivity::class.java))
-        }
+            finish()}
 
         messageBox.setOnClickListener {
             startActivity(Intent(this, MyMsgActivity::class.java))
