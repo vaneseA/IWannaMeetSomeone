@@ -2,6 +2,7 @@
 <resources>
 
     <string-array name="itemList">
+        <item>지역 선택</item>
         <item>서울특별시</item>
         <item>경기도</item>
         <item>충청도</item>

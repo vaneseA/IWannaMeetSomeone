@@ -2,6 +2,7 @@
 <resources>
 
     <string-array name="jobItemList">
+        <item>직업 선택</item>
         <item>회사원</item>
         <item>공무원/공기업</item>
         <item>사업가</item>

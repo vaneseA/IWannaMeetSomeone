@@ -68,7 +68,6 @@ class SignupActivity : AppCompatActivity() {
 
 //      지역 스피너 선언
         val locationSpinner = findViewById<Spinner>(R.id.locationSpinner)
-        locationSpinner.prompt = "지역 선택"
         locationSpinner.adapter = ArrayAdapter.createFromResource(
             this,
             R.array.itemList,
@@ -84,26 +83,23 @@ class SignupActivity : AppCompatActivity() {
 
                 //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작하게 됩니다.
                 when (position) {
-                    0 -> {
-                        location = "서울특별시"
-                    }
-                    1 -> {
-                        location = "경기도"
-                    }
-                    else -> {
-
-                    }
+                    1 -> location = "서울특별시"
+                    2 -> location = "경기도"
+                    3 -> location = "충청도"
+                    4 -> location = "강원도"
+                    5 -> location = "전라도"
+                    6 -> location = "경상도"
+                    7 -> location = "제주"
+                    else -> location = "지역 선택 안함"
                 }
             }
 
             //          아무것도 선택되지 않은 상태
             override fun onNothingSelected(parent: AdapterView<*>) {
-                location = "지역 선택"
             }
         }
 //      직업 스피너 선언
         val jobSpinner = findViewById<Spinner>(R.id.jobSpinner)
-        jobSpinner.prompt = "직업군 선택"
         jobSpinner.adapter = ArrayAdapter.createFromResource(
             this,
             R.array.jobItemList,
@@ -119,19 +115,18 @@ class SignupActivity : AppCompatActivity() {
 
 //              아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작
                 when (position) {
-                    0 -> job = "회사원"
-                    1 -> job = "공무원/공기업"
-
-                    //...
-                    else -> {
-
-                    }
+                    1 -> job = "회사원"
+                    2 -> job = "공무원/공기업"
+                    3 -> job = "사업가"
+                    4 -> job = "서비스직"
+                    5 -> job = "전문직"
+                    6 -> job = "학생"
+                    else -> job = "무직"
                 }
             }
 
             //          아무것도 선택되지 않은 상태
             override fun onNothingSelected(parent: AdapterView<*>) {
-                location = "직업 선택"
             }
         }
 

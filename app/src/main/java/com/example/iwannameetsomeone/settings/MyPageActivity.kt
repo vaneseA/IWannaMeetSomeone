@@ -88,7 +88,6 @@ class MyPageActivity : AppCompatActivity() {
 
 //      직업 스피너 선언
         val myJobSpinner = findViewById<Spinner>(R.id.myJobSpinner)
-        myJobSpinner.prompt = "직업군 선택"
         myJobSpinner.adapter = ArrayAdapter.createFromResource(
             this,
             R.array.jobItemList,
@@ -240,25 +239,25 @@ class MyPageActivity : AppCompatActivity() {
 
 //              스피너 지역 설정
                 when (data!!.location.toString()) {
-                    "서울특별시" -> myLocationSpinner.setSelection(0)
-                    "경기도" -> myLocationSpinner.setSelection(1)
-                    "충청도" -> myLocationSpinner.setSelection(2)
-                    "강원도" -> myLocationSpinner.setSelection(3)
-                    "전라도" -> myLocationSpinner.setSelection(4)
-                    "경상도" -> myLocationSpinner.setSelection(5)
-                    "제주" -> myLocationSpinner.setSelection(6)
-                    else -> null
+                    "서울특별시" -> myLocationSpinner.setSelection(1)
+                    "경기도" -> myLocationSpinner.setSelection(2)
+                    "충청도" -> myLocationSpinner.setSelection(3)
+                    "강원도" -> myLocationSpinner.setSelection(4)
+                    "전라도" -> myLocationSpinner.setSelection(5)
+                    "경상도" -> myLocationSpinner.setSelection(6)
+                    "제주" -> myLocationSpinner.setSelection(7)
+                    else -> myLocationSpinner.setSelection(0)
                 }
 
 //              스피너 직업 설정
                 when (data!!.job.toString()) {
-                    "회사원" -> myJobSpinner.setSelection(0)
-                    "공무원/공기업" -> myJobSpinner.setSelection(1)
-                    "사업가" -> myJobSpinner.setSelection(2)
-                    "서비스직" -> myJobSpinner.setSelection(3)
-                    "전문직" -> myJobSpinner.setSelection(4)
-                    "학생" -> myJobSpinner.setSelection(5)
-                    "무직" -> myJobSpinner.setSelection(6)
+                    "회사원" -> myJobSpinner.setSelection(1)
+                    "공무원/공기업" -> myJobSpinner.setSelection(2)
+                    "사업가" -> myJobSpinner.setSelection(3)
+                    "서비스직" -> myJobSpinner.setSelection(4)
+                    "전문직" -> myJobSpinner.setSelection(5)
+                    "학생" -> myJobSpinner.setSelection(6)
+                    "무직" -> myJobSpinner.setSelection(7)
                     else -> null
                 }
 
@@ -273,12 +272,14 @@ class MyPageActivity : AppCompatActivity() {
 
                             //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작하게 됩니다.
                             when (position) {
-                                0 -> myLocation = "서울특별시"
-                                1 -> myLocation = "경기도"
-
-                                else -> {
-
-                                }
+                                1 -> myLocation = "서울특별시"
+                                2 -> myLocation = "경기도"
+                                3 -> myLocation = "충청도"
+                                4 -> myLocation = "강원도"
+                                5 -> myLocation = "전라도"
+                                6 -> myLocation = "경상도"
+                                7 -> myLocation = "제주"
+                                else -> myLocation = "지역 선택 안함"
                             }
                         }
 
@@ -297,15 +298,13 @@ class MyPageActivity : AppCompatActivity() {
 
                         //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작
                         when (position) {
-                            0 -> {
-                                myJob = "회사원"
-                            }
-                            1 -> {
-                                myJob = "공무원/공기업"
-                            }
-                            else -> {
-
-                            }
+                            1 -> myJob = "회사원"
+                            2 -> myJob = "공무원/공기업"
+                            3 -> myJob = "사업가"
+                            4 -> myJob = "서비스직"
+                            5 -> myJob = "전문직"
+                            6 -> myJob = "학생"
+                            else -> myJob = "무직"
                         }
                     }
 
