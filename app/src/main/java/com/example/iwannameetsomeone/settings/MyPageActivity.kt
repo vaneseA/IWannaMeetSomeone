@@ -79,7 +79,7 @@ class MyPageActivity : AppCompatActivity() {
 
 //      지역 스피너 선언
         val myLocationSpinner = findViewById<Spinner>(R.id.myLocationSpinner)
-        myLocationSpinner.prompt = "지역 선택"
+
         myLocationSpinner.adapter = ArrayAdapter.createFromResource(
             this,
             R.array.itemList,
@@ -233,11 +233,34 @@ class MyPageActivity : AppCompatActivity() {
                 val data = dataSnapshot.getValue(UserDataModel::class.java)
 
 
-
                 myNickname.setText(data!!.nickname)
                 myBirth.setText(data!!.birth)
                 myAge.setText(data!!.age)
 
+
+//              스피너 지역 설정
+                when (data!!.location.toString()) {
+                    "서울특별시" -> myLocationSpinner.setSelection(0)
+                    "경기도" -> myLocationSpinner.setSelection(1)
+                    "충청도" -> myLocationSpinner.setSelection(2)
+                    "강원도" -> myLocationSpinner.setSelection(3)
+                    "전라도" -> myLocationSpinner.setSelection(4)
+                    "경상도" -> myLocationSpinner.setSelection(5)
+                    "제주" -> myLocationSpinner.setSelection(6)
+                    else -> null
+                }
+
+//              스피너 직업 설정
+                when (data!!.job.toString()) {
+                    "회사원" -> myJobSpinner.setSelection(0)
+                    "공무원/공기업" -> myJobSpinner.setSelection(1)
+                    "사업가" -> myJobSpinner.setSelection(2)
+                    "서비스직" -> myJobSpinner.setSelection(3)
+                    "전문직" -> myJobSpinner.setSelection(4)
+                    "학생" -> myJobSpinner.setSelection(5)
+                    "무직" -> myJobSpinner.setSelection(6)
+                    else -> null
+                }
 
                 myLocationSpinner.onItemSelectedListener =
                     object : AdapterView.OnItemSelectedListener {
@@ -250,14 +273,9 @@ class MyPageActivity : AppCompatActivity() {
 
                             //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작하게 됩니다.
                             when (position) {
-                                0 -> {
-                                    myLocationSpinner.setSelection(0)
-                                    myLocation = "서울특별시"
-                                }
-                                1 -> {
-                                    myLocationSpinner.setSelection(1)
-                                    myLocation = "경기도"
-                                }
+                                0 -> myLocation = "서울특별시"
+                                1 -> myLocation = "경기도"
+
                                 else -> {
 
                                 }
