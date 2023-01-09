@@ -11,5 +11,6 @@ data class UserDataModel(
     val age: String? = null,
     val gender: String? = null,
     val location: String? = null,
+    val job: String? = null,
     val token: String? = null,
 )

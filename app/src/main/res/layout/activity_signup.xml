@@ -102,13 +102,25 @@
 
             <EditText
                 android:id="@+id/nickEdt"
-                android:layout_width="wrap_content"
+                android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/bg_edit_text_basic"
-                android:hint="닉네임 입력"
+                android:hint="닉네임"
                 android:inputType="text"
                 android:padding="8dp" />
+            <Spinner
+                android:id="@+id/locationSpinner"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edit_text_basic"
+                android:hint="지역"
+                android:imeOptions="actionDone"
+                android:padding="8dp"
+                android:spinnerMode="dialog"/>
+
             <RadioGroup
                 android:layout_marginStart="5dp"
                 android:id="@+id/rgAccount"
@@ -152,8 +164,8 @@
             <TextView
                 android:id="@+id/birthTxt"
                 android:textSize="20sp"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_edit_text_basic"
                 android:hint="생년월일"
@@ -163,8 +175,8 @@
             <TextView
                 android:id="@+id/ageTxt"
                 android:textSize="20sp"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_width="20dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_edit_text_basic"
@@ -172,17 +184,17 @@
                 android:padding="8dp" />
 
 
-            <EditText
-                android:id="@+id/locationEdt"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
+            <Spinner
+                android:id="@+id/jobSpinner"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_edit_text_basic"
-                android:hint="지역:  예)성동구"
+                android:hint="지역"
                 android:imeOptions="actionDone"
-                android:inputType="text"
-                android:padding="8dp" />
+                android:padding="8dp"
+                android:spinnerMode="dialog"/>
 
         </LinearLayout>
 

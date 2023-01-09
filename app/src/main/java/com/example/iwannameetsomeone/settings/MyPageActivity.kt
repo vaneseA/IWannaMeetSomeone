@@ -33,6 +33,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.android.synthetic.main.activity_login.view.*
 import kotlinx.android.synthetic.main.activity_my_page.*
 import kotlinx.android.synthetic.main.custom_delite_dialog.*
 import kotlinx.android.synthetic.main.custom_dialog.*
@@ -54,6 +55,11 @@ private var y = 0
 private var m = 0
 private var d = 0
 
+
+private var myLocation = ""
+private var myJob = ""
+
+
 lateinit var listviewAdapter: ListViewAdapter
 lateinit var getterUid: String
 lateinit var getterToken: String
@@ -69,74 +75,26 @@ class MyPageActivity : AppCompatActivity() {
 
         listviewAdapter = ListViewAdapter(this, likeUserList)
         userListView.adapter = listviewAdapter
-//      스피너 선언
-        val locationSpinner = findViewById<Spinner>(R.id.myLocationSpinner)
-        locationSpinner.adapter = ArrayAdapter.createFromResource(
+
+
+//      지역 스피너 선언
+        val myLocationSpinner = findViewById<Spinner>(R.id.myLocationSpinner)
+        myLocationSpinner.prompt = "지역 선택"
+        myLocationSpinner.adapter = ArrayAdapter.createFromResource(
             this,
             R.array.itemList,
             android.R.layout.simple_spinner_item
         )
-        locationSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
 
-                //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작하게 됩니다.
-                when (position) {
-                    0 -> {
-
-                    }
-                    1 -> {
-
-                    }
-                    //...
-                    else -> {
-
-                    }
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-
-            }
-        }
-//      스피너 선언
-        val jobSpinner = findViewById<Spinner>(R.id.myJobSpinner)
-        jobSpinner.adapter = ArrayAdapter.createFromResource(
+//      직업 스피너 선언
+        val myJobSpinner = findViewById<Spinner>(R.id.myJobSpinner)
+        myJobSpinner.prompt = "직업군 선택"
+        myJobSpinner.adapter = ArrayAdapter.createFromResource(
             this,
             R.array.jobItemList,
             android.R.layout.simple_spinner_item
         )
-        jobSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
 
-                //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작하게 됩니다.
-                when (position) {
-                    0 -> {
-
-                    }
-                    1 -> {
-
-                    }
-                    //...
-                    else -> {
-
-                    }
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-
-            }
-        }
 
 
         getMyData()
@@ -259,7 +217,8 @@ class MyPageActivity : AppCompatActivity() {
                 myBirth.text.toString(),
                 myAge.text.toString(),
                 genderCheck,
-                myLocationSpinner.toString()
+                myLocation,
+                myJob
             )
             uploadImageForUpdate(uid)
             finish()
@@ -278,8 +237,65 @@ class MyPageActivity : AppCompatActivity() {
                 myNickname.setText(data!!.nickname)
                 myBirth.setText(data!!.birth)
                 myAge.setText(data!!.age)
-//                myLocation.setText(data!!.location)
 
+
+                myLocationSpinner.onItemSelectedListener =
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>,
+                            view: View,
+                            position: Int,
+                            id: Long
+                        ) {
+
+                            //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작하게 됩니다.
+                            when (position) {
+                                0 -> {
+                                    myLocationSpinner.setSelection(0)
+                                    myLocation = "서울특별시"
+                                }
+                                1 -> {
+                                    myLocationSpinner.setSelection(1)
+                                    myLocation = "경기도"
+                                }
+                                else -> {
+
+                                }
+                            }
+                        }
+
+                        //          아무것도 선택되지 않은 상태
+                        override fun onNothingSelected(parent: AdapterView<*>) {
+
+                        }
+                    }
+                myJobSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>,
+                        view: View,
+                        position: Int,
+                        id: Long
+                    ) {
+
+                        //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작
+                        when (position) {
+                            0 -> {
+                                myJob = "회사원"
+                            }
+                            1 -> {
+                                myJob = "공무원/공기업"
+                            }
+                            else -> {
+
+                            }
+                        }
+                    }
+
+                    //          아무것도 선택되지 않은 상태
+                    override fun onNothingSelected(parent: AdapterView<*>) {
+                        data!!.job
+                    }
+                }
                 //라디오버튼 성별 저장
                 if (data.gender == "여자") {
                     rbProfileSet_Female.setChecked(true)
@@ -491,7 +507,8 @@ class MyPageActivity : AppCompatActivity() {
         birth: String,
         age: String,
         gender: String,
-        location: String
+        location: String,
+        job: String
     ) {
         val genderCheck = if (rbProfileSet_Male.isChecked) "남자" else "여자"
         val dbRef = FirebaseDatabase.getInstance().getReference("users").child(uid)
@@ -502,7 +519,8 @@ class MyPageActivity : AppCompatActivity() {
                 myBirth.text.toString(),
                 myAge.text.toString(),
                 genderCheck,
-                myLocationSpinner.toString()
+                myLocation,
+                myJob
             )
         dbRef.setValue(userInfo)
             .addOnSuccessListener {

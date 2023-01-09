@@ -6,14 +6,11 @@ import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.icu.text.SimpleDateFormat
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
@@ -29,10 +26,7 @@ import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_signup.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.logging.SimpleFormatter
 
 private val TAG = "SignupActivity"
 
@@ -41,6 +35,7 @@ private lateinit var auth: FirebaseAuth
 private var uid = ""
 private var location = ""
 private var nickname = ""
+private var job = ""
 private var y = 0
 private var m = 0
 private var d = 0
@@ -71,6 +66,76 @@ class SignupActivity : AppCompatActivity() {
             startActivityForResult(intent, 0)
         }
 
+//      지역 스피너 선언
+        val locationSpinner = findViewById<Spinner>(R.id.locationSpinner)
+        locationSpinner.prompt = "지역 선택"
+        locationSpinner.adapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.itemList,
+            android.R.layout.simple_spinner_item
+        )
+        locationSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+
+                //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작하게 됩니다.
+                when (position) {
+                    0 -> {
+                        location = "서울특별시"
+                    }
+                    1 -> {
+                        location = "경기도"
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+
+            //          아무것도 선택되지 않은 상태
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                location = "지역 선택"
+            }
+        }
+//      직업 스피너 선언
+        val jobSpinner = findViewById<Spinner>(R.id.jobSpinner)
+        jobSpinner.prompt = "직업군 선택"
+        jobSpinner.adapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.jobItemList,
+            android.R.layout.simple_spinner_item
+        )
+        jobSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+
+//              아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작
+                when (position) {
+                    0 -> job = "회사원"
+                    1 -> job = "공무원/공기업"
+
+                    //...
+                    else -> {
+
+                    }
+                }
+            }
+
+            //          아무것도 선택되지 않은 상태
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                location = "직업 선택"
+            }
+        }
+
+
         signupSaveBtn.setOnClickListener {
 
             val email = findViewById<EditText>(R.id.emailEdt)
@@ -78,8 +143,8 @@ class SignupActivity : AppCompatActivity() {
             val gender = if (rbAccountMale.isChecked) "남자" else "여자"
             val birth = findViewById<TextView>(R.id.birthTxt).text.toString()
             val age = findViewById<TextView>(R.id.ageTxt).text.toString()
-            location = findViewById<EditText>(R.id.locationEdt).text.toString()
             nickname = findViewById<EditText>(R.id.nickEdt).text.toString()
+
 
             if (email.text?.isEmpty()!!) {
                 Toast.makeText(this, "email을 입력해주세요", Toast.LENGTH_SHORT).show()
@@ -123,6 +188,7 @@ class SignupActivity : AppCompatActivity() {
                                         age,
                                         gender,
                                         location,
+                                        job,
                                         token
                                     )
 
@@ -200,7 +266,9 @@ class SignupActivity : AppCompatActivity() {
                 m = month + 1
                 d = dayOfMonth
                 birthTxt!!.text = "$y.$m.$d"
-//나이로직
+
+
+//              나이로직
                 val birthDay: Calendar = Calendar.getInstance()
                 birthDay.set(y, m, d)
 
