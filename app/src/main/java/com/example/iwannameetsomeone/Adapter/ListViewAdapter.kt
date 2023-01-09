@@ -43,8 +43,8 @@ class ListViewAdapter(val context: Context, val items: MutableList<UserDataModel
 
 
 
-        nickname.text = items[position].nickname
-        age.text = items[position].age
+        nickname.text = items[position].nickname + ", "
+        age.text =  items[position].age
         location.text = items[position].location
 
 

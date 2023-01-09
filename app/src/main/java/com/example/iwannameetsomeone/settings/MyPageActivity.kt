@@ -157,6 +157,7 @@ class MyPageActivity : AppCompatActivity() {
                 val name = map.get("nickname").toString()
                 val age = map.get("age").toString()
                 val location = map.get("location").toString()
+                val job = map.get("job").toString()
 
                 val mtDialogView =
                     LayoutInflater.from(this).inflate(R.layout.custom_delite_dialog, null)
@@ -168,6 +169,8 @@ class MyPageActivity : AppCompatActivity() {
                 mtAlertDialog.dialogNickname.text = name
                 mtAlertDialog.dialogAge.text = ", " + age
                 mtAlertDialog.dialogLocation.text = location
+                mtAlertDialog.dialogJob.text = job
+
 
                 val storageRef = Firebase.storage.reference.child(getterUid + ".png")
                 storageRef.downloadUrl.addOnCompleteListener(OnCompleteListener { task ->

@@ -52,25 +52,26 @@ class CardStackAdapter(val context: Context, val items: List<UserDataModel>) :
         val nickname = itemView.findViewById<TextView>(R.id.itemNickname)
         val age = itemView.findViewById<TextView>(R.id.itemAge)
         val location = itemView.findViewById<TextView>(R.id.itemLocation)
-
+        val job = itemView.findViewById<TextView>(R.id.itemJob)
 
         fun binding(data: UserDataModel) {
 
 
-                val storageRef = Firebase.storage.reference.child(data.uid + ".png")
-                storageRef.downloadUrl.addOnCompleteListener(OnCompleteListener { task ->
+            val storageRef = Firebase.storage.reference.child(data.uid + ".png")
+            storageRef.downloadUrl.addOnCompleteListener(OnCompleteListener { task ->
 
-                    if (task.isSuccessful) {
-                        Glide.with(context)
-                            .load(task.result)
-                            .into(image)
+                if (task.isSuccessful) {
+                    Glide.with(context)
+                        .load(task.result)
+                        .into(image)
 
-                    }
+                }
 
-                })
-                nickname.text =data.nickname
-                age.text = ", " + data.age
-                location.text =  data.location
-            }
+            })
+            nickname.text = data.nickname
+            age.text = ", " + data.age
+            location.text = data.location
+            job.text = data.job
         }
     }
+}
