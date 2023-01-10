@@ -208,20 +208,21 @@
         android:padding="10dp"
         android:spinnerMode="dialog" />
 
-    <fragment
-        android:id="@+id/fragmentContainerView"
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="330dp"
+        app:tabIndicatorColor="@color/maincolor"
+        app:tabTextAppearance="@style/tab_text"
+        app:tabTextColor="@color/maincolor" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="400dp"
-        app:navGraph="@navigation/mypage_nav" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="330dp"
-        android:background="@color/white"
-        app:menu="@menu/bottom_nav_menu" />
+        android:layout_marginTop="390dp" />
 
 </RelativeLayout>

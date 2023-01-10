@@ -33,7 +33,16 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.custom_dialog.*
+import kotlinx.android.synthetic.main.custom_likeme_dialog.*
 import kotlinx.android.synthetic.main.custom_mylike_dialog.*
+import kotlinx.android.synthetic.main.custom_mylike_dialog.cancelBtnArea
+import kotlinx.android.synthetic.main.custom_mylike_dialog.dialogAge
+import kotlinx.android.synthetic.main.custom_mylike_dialog.dialogJob
+import kotlinx.android.synthetic.main.custom_mylike_dialog.dialogLocation
+import kotlinx.android.synthetic.main.custom_mylike_dialog.dialogNickname
+import kotlinx.android.synthetic.main.custom_mylike_dialog.dialogProfileImageArea
+import kotlinx.android.synthetic.main.custom_mylike_dialog.messageBtn
+import kotlinx.android.synthetic.main.custom_mylike_dialog.profileDialogBackBtn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -90,6 +99,7 @@ class LikeMeFragment : Fragment() {
                 val map = it.child("users").child(getterUid).getValue() as HashMap<String, Any>
                 val name = map.get("nickname").toString()
                 val age = map.get("age").toString()
+                val job = map.get("job").toString()
                 val location = map.get("location").toString()
 
                 val mtDialogView =
@@ -102,6 +112,7 @@ class LikeMeFragment : Fragment() {
 
                 mtAlertDialog.dialogNickname.text = name
                 mtAlertDialog.dialogAge.text = ", " + age
+                mtAlertDialog.dialogJob.text = job
                 mtAlertDialog.dialogLocation.text = location
 
                 val storageRef = Firebase.storage.reference.child(getterUid + ".png")

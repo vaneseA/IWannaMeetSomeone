@@ -22,7 +22,10 @@ import com.example.iwannameetsomeone.databinding.ActivityMyPageBinding
 
 import com.example.iwannameetsomeone.utils.FirebaseAuthUtils
 import com.example.iwannameetsomeone.utils.FirebaseRef
+import com.example.iwannameetsomeone.viewpager.ViewPagerAdapter
+import com.example.iwannameetsomeone.viewpager.ViewPagerFragmentStateAdapter
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
@@ -52,20 +55,29 @@ lateinit var getterToken: String
 
 class MyPageActivity : AppCompatActivity() {
 
+    private val tabTitleArray = arrayOf(
+        "내가 찜한 회원",
+        "나를 찜한 회원"
+    )
+
 private var  vBinding : ActivityMyPageBinding? = null
     // 매번 null 확인 귀찮음 -> 바인딩 변수 재선언
     private val binding get() = vBinding!!
+    lateinit var mAdapter: ViewPagerFragmentStateAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         vBinding = ActivityMyPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val viewPager = binding.viewPager
+        val tabLayout = binding.tabLayout
+        viewPager.adapter = ViewPagerAdapter(supportFragmentManager, lifecycle)
 
-        val bottomNavigationView = binding.bottomNavigationView
-        val navController = findNavController(R.id.fragmentContainerView)
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = tabTitleArray[position]
+        }.attach()
 
-        bottomNavigationView.setupWithNavController(navController)
 
 //      지역 스피너 선언
         val myLocationSpinner = findViewById<Spinner>(R.id.myLocationSpinner)
