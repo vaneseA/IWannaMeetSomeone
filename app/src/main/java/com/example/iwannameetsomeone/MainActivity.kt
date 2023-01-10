@@ -1,5 +1,6 @@
 package com.example.iwannameetsomeone
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -9,30 +10,22 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.bumptech.glide.Glide
-import com.example.iwannameetsomeone.auth.LoginActivity
 import com.example.iwannameetsomeone.auth.UserDataModel
 import com.example.iwannameetsomeone.settings.MyPageActivity
 import com.example.iwannameetsomeone.slider.CardStackAdapter
 import com.example.iwannameetsomeone.utils.FirebaseAuthUtils
 import com.example.iwannameetsomeone.utils.FirebaseRef
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.CardStackView
 import com.yuyakaido.android.cardstackview.Direction
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_my_page.*
-import kotlinx.android.synthetic.main.item_card.*
 
 class MainActivity : AppCompatActivity() {
     private val likeUserList = mutableListOf<UserDataModel>()
@@ -113,60 +106,61 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun getMyUserData() {
+
+        // 데이터베이스에서 컨텐츠의 세부정보를 검색
         val postListener = object : ValueEventListener {
+            // 데이터스냅샷 내 사용자 데이터 출력
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                Log.d(TAG, dataSnapshot.toString())
+                // 프사 제외한 나머지 정보
                 val data = dataSnapshot.getValue(UserDataModel::class.java)
-
-                Log.d(TAG, data?.gender.toString())
-
+                // 현재 사용자의 성별
                 curruntUserGender = data?.gender.toString()
-
+                // 현재 사용자와 성별이 반대인 사용자 목록
                 getUserDataList(curruntUserGender)
 
             }
-
+            // 실패시
             override fun onCancelled(databaseError: DatabaseError) {
                 // Getting Post failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
             }
         }
+        // 파이어베이스 내 데이터의 변화(추가)를 알려줌
         FirebaseRef.userInfoRef.child(uid).addValueEventListener(postListener)
     }
 
+    // 전체 사용자 정보
     private fun getUserDataList(curruntUserGender: String) {
 
+        // 데이터베이스에서 컨텐츠의 세부정보를 검색
         val postListener = object : ValueEventListener {
+
+            // 데이터스냅샷 내 사용자 데이터 출력
+            @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
+                // 데이터스냅샷 내 사용자 데이터 출력
                 for (dataModel in dataSnapshot.children) {
-                    val likeUserKey = dataModel.key.toString()
+
+                    // 다른 사용자들 정보 가져옴
                     val user = dataModel.getValue(UserDataModel::class.java)
 
+                    // 현재 사용자와 다른 성별인 사용자만 불러옴
                     if (user!!.gender.toString().equals(curruntUserGender)) {
-//                        Log.d("wwwuser", user.toString())
-//                        Log.d("wwwlikeUserKey", likeUserKey)
-//                    } else if (likeUserKey == user.uid) {
-//                        Log.d("wwwuseruid", user.uid)
-                    } else {
 
+                    } else {
                         usersDataList.add(user!!)
                     }
-
-
                 }
-
+                // 동기화(새로고침) -> 리스트 크기 및 아이템 변화를 어댑터에 알림
                 cardStackAdapter.notifyDataSetChanged()
-
-
             }
-
+            //실패시
             override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
             }
         }
+        // 파이어베이스 내 데이터의 변화(추가)를 알려줌
         FirebaseRef.userInfoRef.addValueEventListener(postListener)
 
     }
@@ -177,10 +171,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun userLikeOtherUser(myUid: String, otherUid: String) {
 
+        // (카드 오른쪽으로 넘기면) 좋아요 값 true로 설정
+        FirebaseRef.myLikeRef.child(myUid).child(otherUid).setValue("true")
+        // 나를 좋아하는 사람을 true로 설정
+        FirebaseRef.likeMeRef.child(otherUid).child(myUid).setValue("true")
 
-        FirebaseRef.userLikeRef.child(myUid).child(otherUid).setValue("true")
-
+        // 좋아요 목록
         getOutherUserLikeList(otherUid)
+        // DB
+        // └─userLike
+        //   └─현재 사용자의 UID
+        //     └─현재 사용자가 좋아요 한 사용자의 UID : "true"
     }
 
     private fun getOutherUserLikeList(otherUid: String) {
@@ -207,7 +208,7 @@ class MainActivity : AppCompatActivity() {
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
             }
         }
-        FirebaseRef.userLikeRef.child(otherUid).addValueEventListener(postListener)
+        FirebaseRef.myLikeRef.child(otherUid).addValueEventListener(postListener)
     }
     //Notification
 
