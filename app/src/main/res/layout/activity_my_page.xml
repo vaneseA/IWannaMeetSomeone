@@ -57,7 +57,7 @@
         android:id="@+id/messageBox"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:layout_alignTop="@id/LogoutBtn2"
+        android:layout_alignTop="@id/LogoutBtn"
         android:layout_alignRight="@+id/myJobSpinner"
         android:layout_marginLeft="34dp"
         android:layout_marginTop="-46dp"
@@ -80,7 +80,7 @@
         android:textColor="@color/white" />
 
     <Button
-        android:id="@+id/LogoutBtn2"
+        android:id="@+id/LogoutBtn"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_alignRight="@+id/myJobSpinner"

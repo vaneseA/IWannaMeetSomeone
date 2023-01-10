@@ -7,21 +7,14 @@ import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
-import com.example.iwannameetsomeone.MainActivity
-import com.example.iwannameetsomeone.Message.MsgModel
 import com.example.iwannameetsomeone.Message.MyMsgActivity
-import com.example.iwannameetsomeone.Message.fcm.NotiModel
-import com.example.iwannameetsomeone.Message.fcm.PushNotification
-import com.example.iwannameetsomeone.Message.fcm.RetrofitInstance
 import com.example.iwannameetsomeone.R
 import com.example.iwannameetsomeone.auth.LoginActivity
 import com.example.iwannameetsomeone.auth.UserDataModel
@@ -29,22 +22,15 @@ import com.example.iwannameetsomeone.databinding.ActivityMyPageBinding
 
 import com.example.iwannameetsomeone.utils.FirebaseAuthUtils
 import com.example.iwannameetsomeone.utils.FirebaseRef
-import com.example.iwannameetsomeone.utils.MyInfo
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import kotlinx.android.synthetic.main.activity_login.view.*
 import kotlinx.android.synthetic.main.activity_my_page.*
-import kotlinx.android.synthetic.main.custom_dialog.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import java.util.*
-import kotlin.collections.HashMap
 
 private val uid = FirebaseAuthUtils.getUid()
 
@@ -66,11 +52,13 @@ lateinit var getterToken: String
 
 class MyPageActivity : AppCompatActivity() {
 
-private lateinit var  binding : ActivityMyPageBinding
+private var  vBinding : ActivityMyPageBinding? = null
+    // 매번 null 확인 귀찮음 -> 바인딩 변수 재선언
+    private val binding get() = vBinding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMyPageBinding.inflate(layoutInflater)
+        vBinding = ActivityMyPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
 
@@ -106,7 +94,7 @@ private lateinit var  binding : ActivityMyPageBinding
         messageBox.setOnClickListener {
             startActivity(Intent(this, MyMsgActivity::class.java))
         }
-        LogoutBtn2.setOnClickListener {
+        LogoutBtn.setOnClickListener {
 
             val auth = Firebase.auth
             auth.signOut()
@@ -114,8 +102,9 @@ private lateinit var  binding : ActivityMyPageBinding
             // '새 작업(task) 시작' 또는 '시작하려는 액티비티보다 상위에 존재하는 액티비티 삭제'
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
+            onDestroy()
             startActivity(Intent(this, LoginActivity::class.java))
-            finish()
+
 
         }
         val getAction = registerForActivityResult(
@@ -366,5 +355,11 @@ private lateinit var  binding : ActivityMyPageBinding
 
 
     }
+    override fun onDestroy() {
+        vBinding = null
+        super.onDestroy()
+    }
+
+
 
 }
