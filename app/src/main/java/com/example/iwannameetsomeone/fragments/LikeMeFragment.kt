@@ -224,7 +224,6 @@ class LikeMeFragment : Fragment() {
                 )
             }
         }
-//        val likeMeRef = FirebaseRef.database.getReference("LikeMe")
         FirebaseRef.likeMeRef.child(uid)
             .addValueEventListener(postListener)
 
@@ -338,41 +337,6 @@ class LikeMeFragment : Fragment() {
 
 
         FirebaseRef.myLikeRef.child(myUid).child(otherUid).setValue("true")
-
-    }
-
-    // 전체 사용자 정보
-    private fun getUserDataList(curruntUserGender: String) {
-
-        // 데이터베이스에서 컨텐츠의 세부정보를 검색
-        val postListener = object : ValueEventListener {
-
-            // 데이터스냅샷 내 사용자 데이터 출력
-            @SuppressLint("NotifyDataSetChanged")
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                // 데이터스냅샷 내 사용자 데이터 출력
-                for (dataModel in dataSnapshot.children) {
-
-                    // 다른 사용자들 정보 가져옴
-                    val user = dataModel.getValue(UserDataModel::class.java)
-
-                    // 현재 사용자와 다른 성별인 사용자만 불러옴
-                    if (user!!.gender.toString().equals(curruntUserGender)) {
-
-                    } else {
-                        usersDataList.add(user!!)
-                    }
-                }
-
-            }
-            //실패시
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-            }
-        }
-        // 파이어베이스 내 데이터의 변화(추가)를 알려줌
-        FirebaseRef.userInfoRef.addValueEventListener(postListener)
 
     }
 }

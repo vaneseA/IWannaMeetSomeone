@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="3dp"
+    android:layout_height="50dp"
     android:backgroundTint="@color/whitegray"
     android:background="@drawable/underline">
 
@@ -18,6 +17,7 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/jalnanche"
+            android:layout_gravity="center"
             android:text="홍길동, "
             android:textColor="@color/black"
             android:textSize="20sp" />
@@ -27,6 +27,7 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/jalnanche"
+            android:layout_gravity="center"
             android:text="19살"
             android:textColor="@color/gray"
             android:textSize="18sp" />
@@ -44,11 +45,12 @@
     <TextView
         android:id="@+id/listViewItemLocation"
         android:layout_width="100dp"
-
+        android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:fontFamily="@font/jalnanche"
         android:text="서울특별시"
         android:textColor="@color/gray"
         android:textSize="18sp" />
+
 
 </LinearLayout>

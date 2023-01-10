@@ -2,19 +2,19 @@ package com.example.iwannameetsomeone.Adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import com.example.iwannameetsomeone.R
 import com.example.iwannameetsomeone.auth.UserDataModel
-import java.time.LocalDate
 import java.util.*
 
 class MyLikeLVAdapter(val context: Context, val items: MutableList<UserDataModel>) : BaseAdapter() {
+
+
     // 아이템 총 개수 반환
     override fun getCount(): Int = items.size
 
@@ -40,8 +40,6 @@ class MyLikeLVAdapter(val context: Context, val items: MutableList<UserDataModel
         val nickname = convertView!!.findViewById<TextView>(R.id.listViewItemNickname)
         val location = convertView!!.findViewById<TextView>(R.id.listViewItemLocation)
         val age = convertView!!.findViewById<TextView>(R.id.listViewItemAge)
-
-
 
         nickname.text = items[position].nickname + ", "
         age.text =  items[position].age

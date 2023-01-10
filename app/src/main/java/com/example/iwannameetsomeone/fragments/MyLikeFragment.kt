@@ -1,5 +1,6 @@
 package com.example.iwannameetsomeone.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,13 +13,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
 import com.example.iwannameetsomeone.Adapter.MyLikeLVAdapter
+import com.example.iwannameetsomeone.MainActivity
 import com.example.iwannameetsomeone.Message.MsgModel
+import com.example.iwannameetsomeone.Message.MyMsgActivity
 import com.example.iwannameetsomeone.Message.fcm.NotiModel
 import com.example.iwannameetsomeone.Message.fcm.PushNotification
 import com.example.iwannameetsomeone.Message.fcm.RetrofitInstance
 import com.example.iwannameetsomeone.R
 import com.example.iwannameetsomeone.auth.UserDataModel
 import com.example.iwannameetsomeone.databinding.FragmentMyLikeBinding
+import com.example.iwannameetsomeone.settings.MyPageActivity
 import com.example.iwannameetsomeone.settings.getterToken
 import com.example.iwannameetsomeone.settings.getterUid
 import com.example.iwannameetsomeone.utils.FirebaseAuthUtils
@@ -76,6 +80,11 @@ class MyLikeFragment : Fragment() {
 
         listviewAdapter = MyLikeLVAdapter(requireContext(), MyLikeUserList)
         userListView.adapter = listviewAdapter
+
+
+
+
+
         getMyLikeList()
         userListView.setOnItemClickListener { parent, view, position, id ->
             getterUid = MyLikeUserList[position].uid.toString()
@@ -126,7 +135,10 @@ class MyLikeFragment : Fragment() {
                     mtAlertDialog.dismiss()
                     Toast.makeText(requireContext(), "좋아요를 취소했습니다.", Toast.LENGTH_LONG)
                         .show()
+                    startActivity(Intent(requireContext(), MainActivity::class.java))
+                    startActivity(Intent(requireContext(), MyPageActivity::class.java))
                 }
+
             }
 
 
@@ -327,6 +339,7 @@ class MyLikeFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
+
 
 }
 
