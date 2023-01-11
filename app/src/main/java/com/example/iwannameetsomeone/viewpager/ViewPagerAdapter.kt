@@ -6,9 +6,10 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.iwannameetsomeone.fragments.LikeMeFragment
+import com.example.iwannameetsomeone.fragments.MsgFragment
 import com.example.iwannameetsomeone.fragments.MyLikeFragment
 
-private const val NUM_TABS = 2
+private const val NUM_TABS = 3
 
 class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
@@ -22,6 +23,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
         when (position) {
             0 -> getFragment = MyLikeFragment()
             1 -> getFragment =  LikeMeFragment()
+            2 -> getFragment =  MsgFragment()
 
         }
         return getFragment!!

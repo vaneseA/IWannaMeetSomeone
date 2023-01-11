@@ -14,7 +14,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
-import com.example.iwannameetsomeone.Message.MyMsgActivity
 import com.example.iwannameetsomeone.R
 import com.example.iwannameetsomeone.auth.LoginActivity
 import com.example.iwannameetsomeone.auth.UserDataModel
@@ -57,7 +56,8 @@ class MyPageActivity : AppCompatActivity() {
 
     private val tabTitleArray = arrayOf(
         "내가 찜한 회원",
-        "나를 찜한 회원"
+        "나를 찜한 회원",
+        "쪽지함"
     )
 
 private var  vBinding : ActivityMyPageBinding? = null
@@ -103,9 +103,7 @@ private var  vBinding : ActivityMyPageBinding? = null
         backToTheMain.setOnClickListener {
             finish()}
 
-        messageBox.setOnClickListener {
-            startActivity(Intent(this, MyMsgActivity::class.java))
-        }
+
         LogoutBtn.setOnClickListener {
 
             val auth = Firebase.auth

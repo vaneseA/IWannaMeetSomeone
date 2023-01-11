@@ -12,10 +12,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
-import com.example.iwannameetsomeone.Adapter.MyLikeLVAdapter
+import com.example.iwannameetsomeone.Adapter.LikeLVAdapter
 import com.example.iwannameetsomeone.MainActivity
 import com.example.iwannameetsomeone.Message.MsgModel
-import com.example.iwannameetsomeone.Message.MyMsgActivity
 import com.example.iwannameetsomeone.Message.fcm.NotiModel
 import com.example.iwannameetsomeone.Message.fcm.PushNotification
 import com.example.iwannameetsomeone.Message.fcm.RetrofitInstance
@@ -27,7 +26,6 @@ import com.example.iwannameetsomeone.settings.getterToken
 import com.example.iwannameetsomeone.settings.getterUid
 import com.example.iwannameetsomeone.utils.FirebaseAuthUtils
 import com.example.iwannameetsomeone.utils.FirebaseRef
-import com.example.iwannameetsomeone.utils.MyInfo
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -45,13 +43,12 @@ import kotlinx.coroutines.launch
 class MyLikeFragment : Fragment() {
 
     private val uid = FirebaseAuthUtils.getUid()
-
+    private val token = ""
     private val TAG = "MyLikeFragment"
 
     private var _binding: FragmentMyLikeBinding? = null
     private val binding get() = _binding!!
-    lateinit var listviewAdapter: MyLikeLVAdapter
-//    private val myLikeList = ArrayList<InterestCoinEntity>()
+    lateinit var listviewAdapter: LikeLVAdapter
 
     private val MyLikeUserListUid = mutableListOf<String>()
     private val MyLikeUserList = mutableListOf<UserDataModel>()
@@ -78,7 +75,7 @@ class MyLikeFragment : Fragment() {
 
         val userListView = binding.PeopleWhoMyLikeListView
 
-        listviewAdapter = MyLikeLVAdapter(requireContext(), MyLikeUserList)
+        listviewAdapter = LikeLVAdapter(requireContext(), MyLikeUserList)
         userListView.adapter = listviewAdapter
 
 
@@ -131,7 +128,7 @@ class MyLikeFragment : Fragment() {
                 mtAlertDialog.profileDialogBackBtn.setOnClickListener {
                     mtAlertDialog.dismiss()
                 }
-                mtAlertDialog.cancelBtnArea.setOnClickListener {
+                mtAlertDialog.likeTooBtnArea.setOnClickListener {
                     userLikeCansle(uid, getterUid)
                     mtAlertDialog.dismiss()
                     Toast.makeText(requireContext(), "좋아요를 취소했습니다.", Toast.LENGTH_LONG)
@@ -274,12 +271,15 @@ class MyLikeFragment : Fragment() {
 
     }
 
-    // Dialog
+    // MSG Dialog
     private fun showDialog() {
         val allUid = FirebaseDatabase.getInstance().reference
         allUid.get().addOnSuccessListener {
             val map = it.child("users").child(getterUid).getValue() as HashMap<String, Any>
-            val name = map.get("nickname").toString()
+            val map2 = it.child("users").child(uid).getValue() as HashMap<String, Any>
+
+            val toName = map.get("nickname").toString()
+            val fromName = map2.get("nickname").toString()
 
             val mDialogView =
                 LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog, null)
@@ -289,8 +289,8 @@ class MyLikeFragment : Fragment() {
 
             val mAlertDialog = mBuilder.show()
 
-            mAlertDialog.toNick.text = "$name" + "님에게 메세지를 보냅니다."
-
+            mAlertDialog.toNick.text = "$toName" + "님에게 메세지를 보냅니다."
+            mAlertDialog.fromNick.text = "from: $fromName"
             val btn = mAlertDialog.findViewById<Button>(R.id.sendBtnArea)
             val textArea = mAlertDialog.findViewById<EditText>(R.id.sendTextArea)
 
@@ -300,14 +300,11 @@ class MyLikeFragment : Fragment() {
 
                 val msgText = textArea!!.text.toString()
 
-//            val senderInfo =
-
-
-                val msgModel = MsgModel(MyInfo.myNickname, msgText)
+                val msgModel = MsgModel(fromName, msgText, uid, token)
 
                 FirebaseRef.userMsgRef.child(getterUid).push().setValue(msgModel)
 
-                val notiModel = NotiModel(MyInfo.myNickname, msgText)
+                val notiModel = NotiModel(fromName, msgText)
 
                 val pushModel = PushNotification(notiModel, getterToken)
 

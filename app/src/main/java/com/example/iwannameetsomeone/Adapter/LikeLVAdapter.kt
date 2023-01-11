@@ -12,7 +12,7 @@ import com.example.iwannameetsomeone.R
 import com.example.iwannameetsomeone.auth.UserDataModel
 import java.util.*
 
-class MyLikeLVAdapter(val context: Context, val items: MutableList<UserDataModel>) : BaseAdapter() {
+class LikeLVAdapter(val context: Context, val items: MutableList<UserDataModel>) : BaseAdapter() {
 
 
     // 아이템 총 개수 반환

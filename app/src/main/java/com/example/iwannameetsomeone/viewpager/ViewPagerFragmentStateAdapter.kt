@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.iwannameetsomeone.fragments.LikeMeFragment
+import com.example.iwannameetsomeone.fragments.MsgFragment
 import com.example.iwannameetsomeone.fragments.MyLikeFragment
 
 class ViewPagerFragmentStateAdapter(fragmentActivity: FragmentActivity) :
@@ -12,7 +13,8 @@ class ViewPagerFragmentStateAdapter(fragmentActivity: FragmentActivity) :
     // ViewPager에서 이동할 Fragment list
     private var fragments: ArrayList<Fragment> = arrayListOf(
         MyLikeFragment(),
-        LikeMeFragment()
+        LikeMeFragment(),
+        MsgFragment()
 
 
     )

@@ -33,7 +33,9 @@
         <entry key="app/src/main/res/layout/custom_delite_dialog.xml" value="0.165" />
         <entry key="app/src/main/res/layout/custom_dialog.xml" value="0.25" />
         <entry key="app/src/main/res/layout/custom_likeme_dialog.xml" value="0.1875" />
+        <entry key="app/src/main/res/layout/custom_mylike_dialog.xml" value="0.20104166666666667" />
         <entry key="app/src/main/res/layout/fragment_like_me.xml" value="0.1875" />
+        <entry key="app/src/main/res/layout/fragment_msg.xml" value="0.20104166666666667" />
         <entry key="app/src/main/res/layout/fragment_my_like.xml" value="0.20104166666666667" />
         <entry key="app/src/main/res/layout/item_card.xml" value="0.2" />
         <entry key="app/src/main/res/layout/item_card2.xml" value="0.2125" />

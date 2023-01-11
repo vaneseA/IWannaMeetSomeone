@@ -1,6 +1,5 @@
 package com.example.iwannameetsomeone.fragments
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,7 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
-import com.example.iwannameetsomeone.Adapter.MyLikeLVAdapter
+import com.example.iwannameetsomeone.Adapter.LikeLVAdapter
 import com.example.iwannameetsomeone.Message.MsgModel
 import com.example.iwannameetsomeone.Message.fcm.NotiModel
 import com.example.iwannameetsomeone.Message.fcm.PushNotification
@@ -24,7 +23,6 @@ import com.example.iwannameetsomeone.settings.getterToken
 import com.example.iwannameetsomeone.settings.getterUid
 import com.example.iwannameetsomeone.utils.FirebaseAuthUtils
 import com.example.iwannameetsomeone.utils.FirebaseRef
-import com.example.iwannameetsomeone.utils.MyInfo
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -33,9 +31,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.custom_dialog.*
-import kotlinx.android.synthetic.main.custom_likeme_dialog.*
-import kotlinx.android.synthetic.main.custom_mylike_dialog.*
-import kotlinx.android.synthetic.main.custom_mylike_dialog.cancelBtnArea
+import kotlinx.android.synthetic.main.custom_mylike_dialog.likeTooBtnArea
 import kotlinx.android.synthetic.main.custom_mylike_dialog.dialogAge
 import kotlinx.android.synthetic.main.custom_mylike_dialog.dialogJob
 import kotlinx.android.synthetic.main.custom_mylike_dialog.dialogLocation
@@ -50,6 +46,7 @@ import kotlinx.coroutines.launch
 class LikeMeFragment : Fragment() {
 
     private val usersDataList = mutableListOf<UserDataModel>()
+
     // 사용자 수 세기
     private var userCount = 0
 
@@ -59,7 +56,7 @@ class LikeMeFragment : Fragment() {
 
     private var _binding: FragmentLikeMeBinding? = null
     private val binding get() = _binding!!
-    lateinit var listviewAdapter: MyLikeLVAdapter
+    lateinit var listviewAdapter: LikeLVAdapter
 
 
     private val userLikeMeListUid = mutableListOf<String>()
@@ -87,7 +84,7 @@ class LikeMeFragment : Fragment() {
 
         val userListView = binding.PepleWhoLikesMeListView
 
-        listviewAdapter = MyLikeLVAdapter(requireContext(), userLikeMeList)
+        listviewAdapter = LikeLVAdapter(requireContext(), userLikeMeList)
         userListView.adapter = listviewAdapter
         getUserLikeMeList()
         userListView.setOnItemClickListener { parent, view, position, id ->
@@ -136,11 +133,10 @@ class LikeMeFragment : Fragment() {
                 mtAlertDialog.profileDialogBackBtn.setOnClickListener {
                     mtAlertDialog.dismiss()
                 }
-                mtAlertDialog.cancelBtnArea.setOnClickListener {
+                mtAlertDialog.likeTooBtnArea.setOnClickListener {
                     userLikeOtherUser(uid, usersDataList[userCount].uid.toString())
-                    userLikeCansle(uid, getterUid)
                     mtAlertDialog.dismiss()
-                    Toast.makeText(requireContext(), "나도 좋아요를 눌습니다.", Toast.LENGTH_LONG)
+                    Toast.makeText(requireContext(), "나도 좋아요를 눌렀습니다.", Toast.LENGTH_LONG)
                         .show()
                 }
             }
@@ -282,7 +278,11 @@ class LikeMeFragment : Fragment() {
         val allUid = FirebaseDatabase.getInstance().reference
         allUid.get().addOnSuccessListener {
             val map = it.child("users").child(getterUid).getValue() as HashMap<String, Any>
-            val name = map.get("nickname").toString()
+            val map2 = it.child("users").child(uid).getValue() as HashMap<String, Any>
+
+            val toName = map.get("nickname").toString()
+            val fromName = map2.get("nickname").toString()
+
 
             val mDialogView =
                 LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog, null)
@@ -292,7 +292,8 @@ class LikeMeFragment : Fragment() {
 
             val mAlertDialog = mBuilder.show()
 
-            mAlertDialog.toNick.text = "$name" + "님에게 메세지를 보냅니다."
+            mAlertDialog.toNick.text = "$toName" + "님에게 메세지를 보냅니다."
+            mAlertDialog.fromNick.text = "from: $fromName"
 
             val btn = mAlertDialog.findViewById<Button>(R.id.sendBtnArea)
             val textArea = mAlertDialog.findViewById<EditText>(R.id.sendTextArea)
@@ -303,14 +304,11 @@ class LikeMeFragment : Fragment() {
 
                 val msgText = textArea!!.text.toString()
 
-//            val senderInfo =
-
-
-                val msgModel = MsgModel(MyInfo.myNickname, msgText)
+                val msgModel = MsgModel(fromName, msgText, uid)
 
                 FirebaseRef.userMsgRef.child(getterUid).push().setValue(msgModel)
 
-                val notiModel = NotiModel(MyInfo.myNickname, msgText)
+                val notiModel = NotiModel(fromName, msgText)
 
                 val pushModel = PushNotification(notiModel, getterToken)
 
@@ -324,12 +322,6 @@ class LikeMeFragment : Fragment() {
         }
     }
 
-    private fun userLikeCansle(myUid: String, otherUid: String) {
-
-
-        FirebaseRef.myLikeRef.child(myUid).child(otherUid).removeValue()
-
-    }
 
     //PUSH
     private fun testPush(notification: PushNotification) =

@@ -54,19 +54,6 @@
         android:src="@drawable/camera" />
 
     <Button
-        android:id="@+id/messageBox"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_alignTop="@id/LogoutBtn"
-        android:layout_alignRight="@+id/myJobSpinner"
-        android:layout_marginLeft="34dp"
-        android:layout_marginTop="-46dp"
-        android:background="@color/maincolor"
-        android:fontFamily="@font/jalnanche"
-        android:text="쪽지함"
-        android:textColor="@color/white" />
-
-    <Button
         android:id="@+id/backToTheMain"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
@@ -84,9 +71,8 @@
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_alignRight="@+id/myJobSpinner"
-        android:layout_alignTop="@id/imgChangeBtn"
         android:layout_marginLeft="34dp"
-        android:layout_marginTop="-1dp"
+        android:layout_marginTop="120dp"
         android:background="@color/maincolor"
         android:fontFamily="@font/jalnanche"
         android:text="logout"
@@ -105,7 +91,8 @@
         android:ems="10"
         android:padding="10dp"
         android:privateImeOptions="defaultInputmode=korean"
-        android:text="닉네임" />
+        android:text="닉네임"
+        android:textColor="@color/gray" />
 
     <RadioGroup
         android:id="@+id/radio_group_profile_set"
@@ -190,7 +177,8 @@
         android:clickable="true"
         android:gravity="center_vertical"
         android:padding="10dp"
-        android:spinnerMode="dialog" />
+        android:spinnerMode="dialog"
+        android:textColor="@color/gray" />
 
     <Spinner
         android:id="@+id/myJobSpinner"
@@ -206,7 +194,8 @@
         android:ems="11"
         android:gravity="center_vertical"
         android:padding="10dp"
-        android:spinnerMode="dialog" />
+        android:spinnerMode="dialog"
+        android:textColor="@color/gray" />
 
 
     <com.google.android.material.tabs.TabLayout
