@@ -16,6 +16,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import com.example.iwannameetsomeone.MainActivity
 import com.example.iwannameetsomeone.R
+import com.example.iwannameetsomeone.databinding.ActivityLoginBinding
+import com.example.iwannameetsomeone.databinding.ActivitySignupBinding
 import com.example.iwannameetsomeone.utils.FirebaseRef
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
@@ -28,8 +30,13 @@ import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import java.util.*
 
-private val TAG = "SignupActivity"
+// (전역변수) 바인딩 객체 선언
+private var vBinding: ActivitySignupBinding? = null
 
+// 매번 null 확인 귀찮음 -> 바인딩 변수 재선언
+private val binding get() = vBinding!!
+
+//AUTH
 private lateinit var auth: FirebaseAuth
 
 private var uid = ""
@@ -42,12 +49,17 @@ private var d = 0
 
 class SignupActivity : AppCompatActivity() {
 
+
     var isPwDupOk = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_signup)
-        // Initialize Firebase Auth
+        // 자동 생성된 뷰바인딩 클래스에서의 inflate 메서드 활용
+        // -> 액티비티에서 사용할 바인딩 클래스의 인스턴스 생성
+        vBinding = ActivitySignupBinding.inflate(layoutInflater)
+        // -> 생성된 뷰를 액티비티에 표시
+        setContentView(binding.root)
+
         auth = Firebase.auth
 
 
@@ -57,7 +69,7 @@ class SignupActivity : AppCompatActivity() {
                 profileImg.setImageURI(uri)
             }
         )
-        profileImgBtn.setOnClickListener {
+        binding.profileImgBtn.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             getAction.launch("image/*")
             //기존 버튼 배경 사라지게

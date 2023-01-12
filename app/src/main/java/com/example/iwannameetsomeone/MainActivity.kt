@@ -51,7 +51,6 @@ class MainActivity : AppCompatActivity() {
     // 현재 사용자의 성별
     private lateinit var curruntUserGender: String
 
-    private lateinit var userUid: String
 
     // UID
     private var uid = FirebaseAuthUtils.getUid()
@@ -63,7 +62,6 @@ class MainActivity : AppCompatActivity() {
         // -> 액티비티에서 사용할 바인딩 클래스의 인스턴스 생성
         vBinding = ActivityMainBinding.inflate(layoutInflater)
 
-        // getRoot 메서드로 레이아웃 내부 최상위에 있는 뷰의 인스턴스 활용
         // -> 생성된 뷰를 액티비티에 표시
         setContentView(binding.root)
 
