@@ -34,8 +34,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import kotlinx.android.synthetic.main.custom_dialog.*
 import kotlinx.android.synthetic.main.custom_likeme_dialog.*
+import kotlinx.android.synthetic.main.custom_msg_dialog.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -112,9 +112,6 @@ class MyLikeFragment : Fragment() {
 
             //선택한 유저의 Token을 받아옴
             getterToken = MyLikeUserList[position].token.toString()
-
-            //모든 유저의 UID
-            val allUid = FirebaseDatabase.getInstance().reference
 
             //모든 유저의 UID를 성공적으로 받아왔을 때
             allUid.get().addOnSuccessListener {
@@ -312,10 +309,10 @@ class MyLikeFragment : Fragment() {
 
     }
 
-    // MSG Dialog
+    // 메세지 다이얼로그
     private fun showDialogForMsg() {
 
-
+        //모든 유저의 UID를 성공정우를 받아올 경우
         allUid.get().addOnSuccessListener {
 
             //HashMap으로 다른 유저의 UID를 가져옴
@@ -333,7 +330,7 @@ class MyLikeFragment : Fragment() {
 
             //다이얼로그 뷰
             val mDialogView =
-                LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog, null)
+                LayoutInflater.from(requireContext()).inflate(R.layout.custom_msg_dialog, null)
             val mBuilder = AlertDialog.Builder(requireContext())
                 .setView(mDialogView)
 
@@ -343,36 +340,47 @@ class MyLikeFragment : Fragment() {
             mAlertDialog.toNick.text = "$toName" + "님에게 메세지를 보냅니다."
             mAlertDialog.fromNick.text = "from: $fromName"
 
+            //custom_msg_dialog의 ID 정의
             val btn = mAlertDialog.findViewById<Button>(R.id.sendBtnArea)
             val textArea = mAlertDialog.findViewById<EditText>(R.id.sendTextArea)
 
+
+            //다이얼로그를 닫는 버튼
             mAlertDialog.dialogBackBtn.setOnClickListener { mAlertDialog.dismiss() }
 
+            //메세지 보내기 버튼
             btn?.setOnClickListener {
 
+                //간결하게 입력하기 위해 메세지를 담아둠
                 val msgText = textArea!!.text.toString()
-
+                //메세지 모델
                 val msgModel = MsgModel(fromName, msgText, uid, token)
 
+                // 파이어베이스에 메시지 업로드
                 FirebaseRef.userMsgRef.child(getterUid).push().setValue(msgModel)
 
                 val notiModel = NotiModel(fromName, msgText)
-
                 val pushModel = PushNotification(notiModel, getterToken)
 
+                // 푸시 메시지
                 testPush(pushModel)
 
+                //메세지 발신 성공토스트
                 Toast.makeText(requireContext(), "메세지를 전송헀습니다", Toast.LENGTH_LONG)
                     .show()
+
+                // 다이얼로그 종료
                 mAlertDialog.dismiss()
 
             }
         }
     }
 
+
+    //좋아요 취소버튼
     private fun userLikeCansle(myUid: String, otherUid: String) {
 
-
+        // 파이어베이스에 내 좋아요 목록중 선택한 유저의 UID 삭제
         FirebaseRef.myLikeRef.child(myUid).child(otherUid).removeValue()
 
     }
@@ -384,12 +392,6 @@ class MyLikeFragment : Fragment() {
             RetrofitInstance.api.postNotification(notification)
 
         }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        vBinding = null
-    }
-
 
 }
 

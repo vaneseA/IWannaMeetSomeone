@@ -31,7 +31,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import kotlinx.android.synthetic.main.custom_dialog.*
+import kotlinx.android.synthetic.main.custom_msg_dialog.*
 import kotlinx.android.synthetic.main.custom_mylike_dialog.likeTooBtnArea
 import kotlinx.android.synthetic.main.custom_mylike_dialog.dialogAge
 import kotlinx.android.synthetic.main.custom_mylike_dialog.dialogJob
@@ -52,6 +52,10 @@ class LikeMeFragment : Fragment() {
 
     //Uid
     private val uid = FirebaseAuthUtils.getUid()
+
+
+    //Token
+    private val token = ""
 
     //TAG
     private val TAG = "LikeMeFragment"
@@ -142,6 +146,7 @@ class LikeMeFragment : Fragment() {
                     .setView(mtDialogView)
 
                 val mtAlertDialog = mtBuilder.show()
+
 
                 //다이얼로그 상의 정보를 Map의 정보를 받아와 입력
                 mtAlertDialog.dialogNickname.text = name
@@ -284,6 +289,7 @@ class LikeMeFragment : Fragment() {
             .addValueEventListener(postListener)
 
     }
+
     // 전체 사용자 정보
     private fun getUserDataList() {
 
@@ -304,6 +310,7 @@ class LikeMeFragment : Fragment() {
                 // 동기화(새로고침) -> 리스트 크기 및 아이템 변화를 어댑터에 알림
                 listviewAdapter.notifyDataSetChanged()
             }
+
             //실패시
             override fun onCancelled(databaseError: DatabaseError) {
                 // Getting Post failed, log a message
@@ -314,49 +321,66 @@ class LikeMeFragment : Fragment() {
         FirebaseRef.userInfoRef.addValueEventListener(postListener)
     }
 
-    // MSG Dialog
+    // 메세지 다이얼로그
     private fun showDialogForMsg() {
 
+        //모든 유저의 UID를 성공정우를 받아올 경우
         allUid.get().addOnSuccessListener {
+            //HashMap으로 다른 유저의 UID를 가져옴
             val map = it.child("users").child(getterUid).getValue() as HashMap<String, Any>
+
+            //HashMap으로 내 UID를 가져옴
             val map2 = it.child("users").child(uid).getValue() as HashMap<String, Any>
 
+            //map을 이용해 다른 유저의 닉네임을 받아옴
             val toName = map.get("nickname").toString()
+
+            //map을 이용해 내 닉네임을 받아옴
             val fromName = map2.get("nickname").toString()
 
-
+            //다이얼로그 뷰
             val mDialogView =
-                LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog, null)
+                LayoutInflater.from(requireContext()).inflate(R.layout.custom_msg_dialog, null)
             val mBuilder = AlertDialog.Builder(requireContext())
                 .setView(mDialogView)
 
 
             val mAlertDialog = mBuilder.show()
 
+            //다이얼로그 상의 정보를 Map의 정보를 받아와 입력
             mAlertDialog.toNick.text = "$toName" + "님에게 메세지를 보냅니다."
             mAlertDialog.fromNick.text = "from: $fromName"
 
+            //custom_msg_dialog의 ID 정의
             val btn = mAlertDialog.findViewById<Button>(R.id.sendBtnArea)
             val textArea = mAlertDialog.findViewById<EditText>(R.id.sendTextArea)
 
+
+            //다이얼로그를 닫는 버튼
             mAlertDialog.dialogBackBtn.setOnClickListener { mAlertDialog.dismiss() }
 
+            //메세지 보내기 버튼
             btn?.setOnClickListener {
 
+                //간결하게 입력하기 위해 메세지를 담아둠
                 val msgText = textArea!!.text.toString()
+                //메세지 모델
+                val msgModel = MsgModel(fromName, msgText, uid, token)
 
-                val msgModel = MsgModel(fromName, msgText, uid)
-
+                // 파이어베이스에 메시지 업로드
                 FirebaseRef.userMsgRef.child(getterUid).push().setValue(msgModel)
 
                 val notiModel = NotiModel(fromName, msgText)
-
                 val pushModel = PushNotification(notiModel, getterToken)
 
+                // 푸시 메시지
                 testPush(pushModel)
 
+                //메세지 발신 성공토스트
                 Toast.makeText(requireContext(), "메세지를 전송헀습니다", Toast.LENGTH_LONG)
                     .show()
+
+                // 다이얼로그 종료
                 mAlertDialog.dismiss()
 
             }

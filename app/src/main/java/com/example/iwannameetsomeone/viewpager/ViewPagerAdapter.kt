@@ -9,15 +9,14 @@ import com.example.iwannameetsomeone.fragments.LikeMeFragment
 import com.example.iwannameetsomeone.fragments.MsgFragment
 import com.example.iwannameetsomeone.fragments.MyLikeFragment
 
-private const val NUM_TABS = 3
-
 class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
 
+    //탭 총 개수
     override fun getItemCount(): Int {
-        return NUM_TABS
+        return 3
     }
-
+    //포지션 선택에 따른 프래그먼트
     override fun createFragment(position: Int): Fragment {
         var getFragment:Fragment? = null
         when (position) {

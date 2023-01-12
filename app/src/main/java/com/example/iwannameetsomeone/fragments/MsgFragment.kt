@@ -16,7 +16,6 @@ import com.example.iwannameetsomeone.Message.fcm.NotiModel
 import com.example.iwannameetsomeone.Message.fcm.PushNotification
 import com.example.iwannameetsomeone.Message.fcm.RetrofitInstance
 import com.example.iwannameetsomeone.R
-import com.example.iwannameetsomeone.auth.UserDataModel
 import com.example.iwannameetsomeone.databinding.FragmentMsgBinding
 import com.example.iwannameetsomeone.settings.getterToken
 import com.example.iwannameetsomeone.settings.getterUid
@@ -26,7 +25,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.custom_dialog.*
+import kotlinx.android.synthetic.main.custom_msg_dialog.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -134,7 +133,7 @@ class MsgFragment : Fragment() {
             val fromName = map2.get("nickname").toString()
 
             val mDialogView =
-                LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog, null)
+                LayoutInflater.from(requireContext()).inflate(R.layout.custom_msg_dialog, null)
             val mBuilder = AlertDialog.Builder(requireContext())
                 .setView(mDialogView)
 

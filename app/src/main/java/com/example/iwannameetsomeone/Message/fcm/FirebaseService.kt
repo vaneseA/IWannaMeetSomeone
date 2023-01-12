@@ -19,9 +19,7 @@ import com.google.firebase.messaging.RemoteMessage
 // 앱에서는 알람을 띄워줌 -> ok
 
 
-class FirebaseService : FirebaseMessagingService(){
-
-    private val TAG = "FirebaseService"
+class FirebaseService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
@@ -30,26 +28,21 @@ class FirebaseService : FirebaseMessagingService(){
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        Log.e(TAG, message.notification?.title.toString())
-        Log.e(TAG, message.notification?.body.toString())
-//
-//        val title = message.notification?.title.toString()
-//        val body = message.notification?.body.toString()
-
         val title = message.data["title"].toString()
         val body = message.data["content"].toString()
 
+
+        // 알림 채널 시스템에 등록
         createNotificationChannel()
+
+        // 알림 보내기
         sendNotification(title, body)
-
-
 
     }
 
 
     private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
+        // API 26 이상에서만 NotificationChannel을 생성(API 25 이하는 지원하지 않음)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "name"
             val descriptionText = "description"
@@ -57,14 +50,13 @@ class FirebaseService : FirebaseMessagingService(){
             val channel = NotificationChannel("Test_Channel", name, importance).apply {
                 description = descriptionText
             }
-            // Register the channel with the system
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
 
-    private fun sendNotification(title : String, body: String){
+    private fun sendNotification(title: String, body: String) {
         var builder = NotificationCompat.Builder(this, "Test_Channel")
             .setSmallIcon(R.drawable.ic_launcher_background)
             .setContentTitle(title)

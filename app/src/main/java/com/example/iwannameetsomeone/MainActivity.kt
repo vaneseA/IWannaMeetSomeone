@@ -26,6 +26,7 @@ import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_my_page.*
 
 class MainActivity : AppCompatActivity() {
     // 태그
@@ -116,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         getMyUserData()
     }
 
-
+    //내 정보를 받아오는 함수
     private fun getMyUserData() {
 
         // 데이터베이스에서 컨텐츠의 세부정보를 검색
@@ -165,7 +166,7 @@ class MainActivity : AppCompatActivity() {
 
                     // 현재 사용자와 다른 성별인 사용자만 불러옴
                     if (user!!.gender.toString().equals(curruntUserGender)) {
-                    } else {
+                    }else {
                         usersDataList.add(user)
                     }
                 }
