@@ -1,6 +1,5 @@
 package com.example.iwannameetsomeone.auth
 
-import java.util.*
 
 
 data class UserDataModel(

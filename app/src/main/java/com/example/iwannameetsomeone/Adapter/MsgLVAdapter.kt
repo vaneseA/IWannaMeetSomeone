@@ -1,5 +1,6 @@
 package com.example.iwannameetsomeone.Adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,7 @@ class MsgLVAdapter(val context: Context, val items: MutableList<MsgModel>) : Bas
 
 
     // 뷰를 꾸며줌
+    @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 
         var convertView = convertView
@@ -31,7 +33,7 @@ class MsgLVAdapter(val context: Context, val items: MutableList<MsgModel>) : Bas
                 .inflate(R.layout.list_view_message_item, parent, false)
 
         }
-// 메시지 보낸 사람의 별명과 내용을
+        // 메시지 보낸 사람과 내용
         val nicknameArea = convertView!!.findViewById<TextView>(R.id.messageListViewItemNickname)
         val textArea = convertView!!.findViewById<TextView>(R.id.messageListViewItemMassage)
 

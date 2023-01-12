@@ -39,7 +39,6 @@ private val TAG: String = "MsgFragment"
 lateinit var msgListviewAdapter: MsgLVAdapter
 
 val msgList = mutableListOf<MsgModel>()
-lateinit var getterUid: String
 
 class MsgFragment : Fragment() {
 

@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.iwannameetsomeone.auth.UserDataModel
+import com.example.iwannameetsomeone.databinding.ActivityMainBinding
 import com.example.iwannameetsomeone.settings.MyPageActivity
 import com.example.iwannameetsomeone.slider.CardStackAdapter
 import com.example.iwannameetsomeone.utils.FirebaseAuthUtils
@@ -23,30 +24,48 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
-import com.yuyakaido.android.cardstackview.CardStackView
 import com.yuyakaido.android.cardstackview.Direction
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private val likeUserList = mutableListOf<UserDataModel>()
-
-    lateinit var cardStackAdapter: CardStackAdapter
-    lateinit var manager: CardStackLayoutManager
-
+    // 태그
     private val TAG = "MainActivity"
 
+
+    // (전역변수) 바인딩 객체 선언
+    private var vBinding: ActivityMainBinding? = null
+
+    // 매번 null 확인 귀찮음 -> 바인딩 변수 재선언
+    private val binding get() = vBinding!!
+
+    // 카드스택뷰
+    lateinit var cardStackAdapter: CardStackAdapter
+    private lateinit var manager: CardStackLayoutManager
+
+    // 사용자 데이터 리스트
     private val usersDataList = mutableListOf<UserDataModel>()
 
+    // 사용자 수 세기
     private var userCount = 0
 
+    // 현재 사용자의 성별
+    private lateinit var curruntUserGender: String
+
+    private lateinit var userUid: String
+
+    // UID
     private var uid = FirebaseAuthUtils.getUid()
 
-    private lateinit var curruntUserGender: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        // 자동 생성된 뷰바인딩 클래스에서의 inflate 메서드 활용
+        // -> 액티비티에서 사용할 바인딩 클래스의 인스턴스 생성
+        vBinding = ActivityMainBinding.inflate(layoutInflater)
 
+        // getRoot 메서드로 레이아웃 내부 최상위에 있는 뷰의 인스턴스 활용
+        // -> 생성된 뷰를 액티비티에 표시
+        setContentView(binding.root)
 
         myInfo.setOnClickListener {
 
@@ -54,53 +73,48 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        val cardStackView = findViewById<CardStackView>(R.id.cardStackView)
-
+        // 카드스택뷰
         manager = CardStackLayoutManager(baseContext, object : CardStackListener {
-            override fun onCardDragging(direction: Direction?, ratio: Float) {
-
-            }
 
             override fun onCardSwiped(direction: Direction?) {
 
-                if (direction == Direction.Right) {
-                    userLikeOtherUser(uid, usersDataList[userCount].uid.toString())
-                }
+                // 왼쪽(관심없음)
                 if (direction == Direction.Left) {
 
                 }
+                // 오른쪽(좋아요)
+                if (direction == Direction.Right) {
+                    // 해당 카드(사용자) 좋아요 처리
+                    myLikeUser(uid, usersDataList[userCount].uid.toString())
+                }
 
-                userCount = userCount + 1
+                // 넘긴 프로필의 수를 셈
+                userCount += 1
 
 
+                // 프로필 전부 다 봤을 때
                 if (userCount == usersDataList.count()) {
+
+                    // 자동으로 새로고침
                     getUserDataList(curruntUserGender)
+                    Toast.makeText(this@MainActivity, "모든 프로필을 확인했습니다", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            override fun onCardRewound() {
-
-            }
-
-            override fun onCardCanceled() {
-
-            }
-
-            override fun onCardAppeared(view: View?, position: Int) {
-
-            }
-
-            override fun onCardDisappeared(view: View?, position: Int) {
-
-            }
+            override fun onCardDragging(direction: Direction?, ratio: Float) {}
+            override fun onCardRewound() {}
+            override fun onCardCanceled() {}
+            override fun onCardAppeared(view: View?, position: Int) {}
+            override fun onCardDisappeared(view: View?, position: Int) {}
 
         })
 
+        // 카드스택어댑터에 데이터 넘김
         cardStackAdapter = CardStackAdapter(baseContext, usersDataList)
         cardStackView.layoutManager = manager
         cardStackView.adapter = cardStackAdapter
 
-//        getUserDataList()
+        // 현재 사용자 정보
         getMyUserData()
     }
 
@@ -109,16 +123,22 @@ class MainActivity : AppCompatActivity() {
 
         // 데이터베이스에서 컨텐츠의 세부정보를 검색
         val postListener = object : ValueEventListener {
+
             // 데이터스냅샷 내 사용자 데이터 출력
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+
                 // 프사 제외한 나머지 정보
                 val data = dataSnapshot.getValue(UserDataModel::class.java)
+
                 // 현재 사용자의 성별
                 curruntUserGender = data?.gender.toString()
+
+
                 // 현재 사용자와 성별이 반대인 사용자 목록
                 getUserDataList(curruntUserGender)
 
             }
+
             // 실패시
             override fun onCancelled(databaseError: DatabaseError) {
                 // Getting Post failed, log a message
@@ -147,14 +167,14 @@ class MainActivity : AppCompatActivity() {
 
                     // 현재 사용자와 다른 성별인 사용자만 불러옴
                     if (user!!.gender.toString().equals(curruntUserGender)) {
-
                     } else {
-                        usersDataList.add(user!!)
+                        usersDataList.add(user)
                     }
                 }
                 // 동기화(새로고침) -> 리스트 크기 및 아이템 변화를 어댑터에 알림
                 cardStackAdapter.notifyDataSetChanged()
             }
+
             //실패시
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
@@ -168,8 +188,7 @@ class MainActivity : AppCompatActivity() {
 
     //유저의 좋아요를 표시하는 부분
     //필요한 데이터값 양쪽의 uid값
-
-    private fun userLikeOtherUser(myUid: String, otherUid: String) {
+    private fun myLikeUser(myUid: String, otherUid: String) {
 
         // (카드 오른쪽으로 넘기면) 좋아요 값 true로 설정
         FirebaseRef.myLikeRef.child(myUid).child(otherUid).setValue("true")
@@ -184,24 +203,34 @@ class MainActivity : AppCompatActivity() {
         //     └─현재 사용자가 좋아요 한 사용자의 UID : "true"
     }
 
+
     private fun getOutherUserLikeList(otherUid: String) {
+
+        // 데이터베이스에서 컨텐츠의 세부정보를 검색
         val postListener = object : ValueEventListener {
+
+            // 데이터스냅샷 내 사용자 데이터 출력
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 //여기 리스트 안에서 나의 uid가 있는지 확인
                 //내가 좋아요를 누른 사람의 좋아요 리스트를 불러온다
                 //상대 좋아요 리스트에서 내 uid가 있는지 확인
                 for (dataModel in dataSnapshot.children) {
 
+                    // 다른 사용자가 좋아요 한 사용자 목록에
                     val likeUserKey = dataModel.key.toString()
+
+                    // 현재 사용자가 포함돼 있으면
                     if (likeUserKey.equals(uid)) {
-                        Toast.makeText(this@MainActivity, "매칭 완료", Toast.LENGTH_SHORT).show()
+                        // 알림 채널 시스템에 등록
                         createNotificationChannel()
+                        // 알림 보내기
                         sendNotification()
                     }
 
                 }
             }
 
+            // 실패시
             override fun onCancelled(databaseError: DatabaseError) {
 
                 // Getting Post failed, log a message
@@ -210,25 +239,26 @@ class MainActivity : AppCompatActivity() {
         }
         FirebaseRef.myLikeRef.child(otherUid).addValueEventListener(postListener)
     }
-    //Notification
 
+    // 알림 채널 시스템에 등록
     private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
             val name = "name"
             val descriptionText = "description"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel("Test_Channel", name, importance).apply {
                 description = descriptionText
             }
-            // Register the channel with the system
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
             notificationManager.createNotificationChannel(channel)
         }
     }
 
+    // 푸시 알림(매칭)
     private fun sendNotification() {
         var builder = NotificationCompat.Builder(this, "Test_Channel")
             .setSmallIcon(R.drawable.ic_launcher_background)
@@ -239,5 +269,16 @@ class MainActivity : AppCompatActivity() {
             notify(123, builder.build())
         }
     }
+
+    // 액티비티 파괴시
+    override fun onDestroy() {
+
+        // 바인딩 클래스 인스턴스 참조를 정리 -> 메모리 효율이 좋아짐
+        vBinding = null
+        super.onDestroy()
+
+    }
+
+
 }
 

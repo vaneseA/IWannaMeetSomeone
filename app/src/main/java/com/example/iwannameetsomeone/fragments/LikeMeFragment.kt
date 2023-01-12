@@ -134,6 +134,7 @@ class LikeMeFragment : Fragment() {
                     mtAlertDialog.dismiss()
                 }
                 mtAlertDialog.likeTooBtnArea.setOnClickListener {
+
                     userLikeOtherUser(uid, usersDataList[userCount].uid.toString())
                     mtAlertDialog.dismiss()
                     Toast.makeText(requireContext(), "나도 좋아요를 눌렀습니다.", Toast.LENGTH_LONG)
