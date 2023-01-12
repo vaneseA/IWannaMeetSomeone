@@ -16,7 +16,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import com.example.iwannameetsomeone.MainActivity
 import com.example.iwannameetsomeone.R
-import com.example.iwannameetsomeone.databinding.ActivityLoginBinding
 import com.example.iwannameetsomeone.databinding.ActivitySignupBinding
 import com.example.iwannameetsomeone.utils.FirebaseRef
 import com.google.android.gms.tasks.OnCompleteListener
@@ -25,7 +24,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.ktx.storage
-import kotlinx.android.synthetic.main.activity_signup.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import java.util.*
@@ -39,6 +37,7 @@ private val binding get() = vBinding!!
 //AUTH
 private lateinit var auth: FirebaseAuth
 
+//UID
 private var uid = ""
 private var location = ""
 private var nickname = ""
@@ -49,7 +48,7 @@ private var d = 0
 
 class SignupActivity : AppCompatActivity() {
 
-
+    //패스워드 중복 체크
     var isPwDupOk = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,19 +65,20 @@ class SignupActivity : AppCompatActivity() {
         val getAction = registerForActivityResult(
             ActivityResultContracts.GetContent(),
             ActivityResultCallback { uri ->
-                profileImg.setImageURI(uri)
+                binding.profileImg.setImageURI(uri)
             }
         )
+        //사진추가 버튼
         binding.profileImgBtn.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             getAction.launch("image/*")
             //기존 버튼 배경 사라지게
-            profileImgBtn.alpha = 0f
+            binding.profileImgBtn.alpha = 0f
 
             startActivityForResult(intent, 0)
         }
 
-//      지역 스피너 선언
+        //지역 스피너 선언
         val locationSpinner = findViewById<Spinner>(R.id.locationSpinner)
         locationSpinner.adapter = ArrayAdapter.createFromResource(
             this,
@@ -93,7 +93,7 @@ class SignupActivity : AppCompatActivity() {
                 id: Long
             ) {
 
-                //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작하게 됩니다.
+                //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작
                 when (position) {
                     1 -> location = "서울특별시"
                     2 -> location = "경기도"
@@ -106,11 +106,10 @@ class SignupActivity : AppCompatActivity() {
                 }
             }
 
-            //          아무것도 선택되지 않은 상태
-            override fun onNothingSelected(parent: AdapterView<*>) {
-            }
+            //아무것도 선택되지 않은 상태
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
-//      직업 스피너 선언
+        //직업 스피너 선언
         val jobSpinner = findViewById<Spinner>(R.id.jobSpinner)
         jobSpinner.adapter = ArrayAdapter.createFromResource(
             this,
@@ -137,43 +136,37 @@ class SignupActivity : AppCompatActivity() {
                 }
             }
 
-            //          아무것도 선택되지 않은 상태
+            //아무것도 선택되지 않은 상태
             override fun onNothingSelected(parent: AdapterView<*>) {
             }
         }
 
-
-        signupSaveBtn.setOnClickListener {
+        //회원가입 완료버튼
+        binding.signupSaveBtn.setOnClickListener {
 
             val email = findViewById<EditText>(R.id.emailEdt)
             val pwd = findViewById<EditText>(R.id.passwordEdt)
-            val gender = if (rbAccountMale.isChecked) "남자" else "여자"
+            val gender = if (binding.rbAccountMale.isChecked) "남자" else "여자"
             val birth = findViewById<TextView>(R.id.birthTxt).text.toString()
             val age = findViewById<TextView>(R.id.ageTxt).text.toString()
             nickname = findViewById<EditText>(R.id.nickEdt).text.toString()
 
-
-            if (email.text?.isEmpty()!!) {
+            if (email.text?.isEmpty()!!) {//아이디 공란일 때
                 Toast.makeText(this, "email을 입력해주세요", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
-            } else if (!isPwDupOk) {
+            } else if (!isPwDupOk) {//패스워드 일치하지 않을 때
                 Toast.makeText(this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
-            } else if (nickname.isEmpty()!!) {
+            } else if (nickname.isEmpty()!!) {//닉네임 공란일 때
                 Toast.makeText(this, "닉네임을 입력해주세요", Toast.LENGTH_SHORT).show()
-//            } else if (birth.isEmpty()!!) {
-//                Toast.makeText(this, "나이를 입력해주세요", Toast.LENGTH_SHORT).show()
-            } else if (location.isEmpty()!!) {
-                Toast.makeText(this, "지역을 입력해주세요", Toast.LENGTH_SHORT).show()
             } else {
                 auth.createUserWithEmailAndPassword(email.text.toString(), pwd.text.toString())
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-
                             val user = auth.currentUser
                             uid = user?.uid.toString()
 
-                            // Token
+                            // 토큰
                             FirebaseMessaging.getInstance().token.addOnCompleteListener(
                                 OnCompleteListener { task ->
                                     if (!task.isSuccessful) {
@@ -216,15 +209,16 @@ class SignupActivity : AppCompatActivity() {
             }
 
         }
-        passwordEdt.addTextChangedListener {
-            isPwDupOk = (it.toString() == pwDupCheckEdt.text.toString())
+        //비밀번호 입력 변화처리
+        binding.passwordEdt.addTextChangedListener {
+            isPwDupOk = (it.toString() == binding.pwDupCheckEdt.text.toString())
         }
-        pwDupCheckEdt.addTextChangedListener {
-            isPwDupOk = (it.toString() == passwordEdt.text.toString())
+        binding.pwDupCheckEdt.addTextChangedListener {
+            isPwDupOk = (it.toString() == binding.passwordEdt.text.toString())
         }
     }
 
-
+    //이미지 업로드
     private fun uploadImage(uid: String) {
 
         val storage = Firebase.storage
@@ -232,9 +226,9 @@ class SignupActivity : AppCompatActivity() {
 
 
         // Get the data from an ImageView as bytes
-        profileImg.isDrawingCacheEnabled = true
-        profileImg.buildDrawingCache()
-        val bitmap = (profileImg.drawable as BitmapDrawable).bitmap
+        binding.profileImg.isDrawingCacheEnabled = true
+        binding.profileImg.buildDrawingCache()
+        val bitmap = (binding.profileImg.drawable as BitmapDrawable).bitmap
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
@@ -250,8 +244,9 @@ class SignupActivity : AppCompatActivity() {
 
     }
 
+    //생년월일 선택 스피너
     fun clickBirth(view: View?) {
-        val birthDate = birthTxt!!.text.toString()
+        val birthDate = binding.birthTxt!!.text.toString()
         val birthDates = birthDate.split("\\.").toTypedArray()
         var userYear: Int
         var userMonth: Int
@@ -272,25 +267,21 @@ class SignupActivity : AppCompatActivity() {
                 y = year
                 m = month + 1
                 d = dayOfMonth
-                birthTxt!!.text = "$y.$m.$d"
+                binding.birthTxt!!.text = "$y.$m.$d"
 
 
-//              나이로직
+                //나이로직
                 val birthDay: Calendar = Calendar.getInstance()
                 birthDay.set(y, m, d)
-
                 val today: Calendar = Calendar.getInstance()
                 var age: Int = today.get(Calendar.YEAR) - birthDay.get(Calendar.YEAR)
-
                 if (today.get(Calendar.DAY_OF_YEAR) < birthDay.get(Calendar.DAY_OF_YEAR))
                     age--
-
-                ageTxt!!.text = age.toString() + "세"
+                binding.ageTxt!!.text = age.toString() + "세"
             },
             userYear,
             userMonth - 1,
             userDate
-
         )
 
 
@@ -298,6 +289,15 @@ class SignupActivity : AppCompatActivity() {
         datePickerDialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
         datePickerDialog.show()
 
+
+    }
+
+    // 액티비티 파괴시
+    override fun onDestroy() {
+
+        // 바인딩 클래스 인스턴스 참조를 정리 -> 메모리 효율이 좋아짐
+        vBinding = null
+        super.onDestroy()
 
     }
 
